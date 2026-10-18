@@ -1,0 +1,3375 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Udaan — Learn • Grow • Achieve | Citi Hackathon</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts for English and Hindi (Devanagari) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Rozha+One&family=Yantramanav:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Canvas Confetti for Gamification and Milestone celebrations -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            udaan: {
+              50: '#F0FDF4',
+              100: '#DCFCE7',
+              200: '#BBF7D0',
+              300: '#86EFAC',
+              400: '#4ADE80',
+              500: '#22C55E',
+              600: '#16A34A',
+              700: '#15803D',
+              800: '#0D5F3A', // Primary brand deep forest green
+              900: '#084026',
+              accent: '#F59E0B',
+              warm: '#FBFDF9',
+              card: '#FFFFFF',
+              border: '#E2E8F0'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '"Yantramanav"', 'sans-serif'],
+            hindi: ['"Yantramanav"', '"Plus Jakarta Sans"', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #F8FAF8;
+      color: #1E293B;
+      font-family: 'Plus Jakarta Sans', 'Yantramanav', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 9999px;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+    }
+    .pulse-ring {
+      animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.15); opacity: 0.4; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+  </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col selection:bg-emerald-100 selection:text-emerald-900">
+
+  <!-- ================= TOP DEMO QUICK-BAR (Hackathon Evaluator Switcher) ================= -->
+  <div class="bg-slate-900 text-slate-300 text-xs px-3 py-1.5 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2 z-50">
+    <div class="flex items-center gap-2">
+      <span class="inline-flex items-center px-1.5 py-0.5 rounded font-semibold bg-emerald-950 text-emerald-400 border border-emerald-800">
+        <i data-lucide="award" class="w-3 h-3 mr-1 inline"></i> Citi Hackathon Prototype
+      </span>
+      <span class="hidden sm:inline text-slate-400">| Project Udaan : Empowering Rural Youth</span>
+    </div>
+    
+    <div class="flex items-center gap-2 flex-wrap">
+      <span class="text-slate-400">Switch Demo Role:</span>
+      <div class="inline-flex rounded-md shadow-sm" role="group">
+        <button onclick="setRole('student')" id="btn-role-student" class="px-2.5 py-0.5 text-xs font-medium rounded-l-md bg-emerald-700 text-white hover:bg-emerald-600 transition">
+          Student (Priya)
+        </button>
+        <button onclick="setRole('facilitator')" id="btn-role-facilitator" class="px-2.5 py-0.5 text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+          Teacher (Ramesh)
+        </button>
+        <button onclick="setRole('mentor')" id="btn-role-mentor" class="px-2.5 py-0.5 text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+          Mentor (Ananya)
+        </button>
+        <button onclick="setRole('provider')" id="btn-role-provider" class="px-2.5 py-0.5 text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+          Provider (SkillKisan)
+        </button>
+        <button onclick="setRole('admin')" id="btn-role-admin" class="px-2.5 py-0.5 text-xs font-medium rounded-r-md bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+          Admin
+        </button>
+      </div>
+
+      <div class="h-4 w-px bg-slate-700 mx-1 hidden sm:block"></div>
+
+      <!-- Quick Reset State Button -->
+      <button onclick="resetDemoData()" title="Reset to initial state" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center gap-1">
+        <i data-lucide="refresh-cw" class="w-3 h-3"></i> <span class="hidden md:inline">Reset</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= GLOBAL HEADER ================= -->
+  <header class="sticky top-0 bg-white/95 backdrop-blur-md border-b border-slate-200 z-40 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Logo Branding -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="navigateTo('landing')">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-700 to-emerald-900 flex items-center justify-center text-white shadow-md shadow-emerald-900/10 ring-2 ring-emerald-500/20">
+          <!-- Sprout Leaf Logo Icon -->
+          <svg class="w-6 h-6 text-emerald-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22v-9" />
+            <path d="M12 13a5 5 0 0 0-5-5H3a9 9 0 0 0 9 9Z" fill="currentColor" fill-opacity="0.3" />
+            <path d="M12 13a5 5 0 0 1 5-5h4a9 9 0 0 1-9 9Z" fill="currentColor" fill-opacity="0.3" />
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="font-bold text-xl tracking-tight text-slate-900">Udaan</span>
+            <span class="text-xs px-1.5 py-0.2 bg-emerald-100 text-emerald-800 font-semibold rounded">उड़ान</span>
+          </div>
+          <p class="text-[10px] text-slate-500 font-medium tracking-wide uppercase" data-i18n="tagline">Learn • Grow • Achieve</p>
+        </div>
+      </div>
+
+      <!-- Center Search (When in Authenticated Mode) -->
+      <div id="header-search-bar" class="hidden md:flex items-center flex-1 max-w-md mx-6">
+        <div class="relative w-full">
+          <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+          <input type="text" id="global-search-input" onkeyup="handleGlobalSearch(event)" placeholder="Search careers, ITIs, scholarships, skills..." 
+            class="w-full bg-slate-100 hover:bg-slate-50 focus:bg-white text-sm pl-9 pr-4 py-2 rounded-full border border-transparent focus:border-emerald-600 focus:outline-none transition-all shadow-inner">
+        </div>
+      </div>
+
+      <!-- Right Navigation Actions -->
+      <div class="flex items-center gap-3">
+        <!-- Language Switcher Pill -->
+        <div class="relative">
+          <button onclick="toggleLangMenu()" id="lang-btn" class="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border border-slate-300 hover:border-emerald-600 bg-white shadow-sm transition">
+            <span class="text-base leading-none">🇮🇳</span>
+            <span id="current-lang-label">हिन्दी</span>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-500"></i>
+          </button>
+          <div id="lang-dropdown" class="hidden absolute right-0 mt-1.5 w-36 bg-white rounded-xl shadow-xl border border-slate-200 py-1 z-50 text-xs">
+            <button onclick="switchLanguage('hi')" class="w-full text-left px-3 py-2 hover:bg-emerald-50 flex items-center justify-between font-medium text-slate-700">
+              <span>🇮🇳 हिन्दी</span>
+              <span class="text-[10px] text-emerald-700 font-bold">Active</span>
+            </button>
+            <button onclick="switchLanguage('en')" class="w-full text-left px-3 py-2 hover:bg-emerald-50 flex items-center justify-between font-medium text-slate-700">
+              <span>🇬🇧 English</span>
+            </button>
+            <button onclick="switchLanguage('mr')" class="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center justify-between text-slate-500">
+              <span>मराठी (Demo)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Auth State Buttons -->
+        <div id="unauth-actions" class="flex items-center gap-2">
+          <button onclick="navigateTo('login')" class="px-3.5 py-1.5 text-xs font-semibold text-slate-700 hover:text-emerald-800 transition" data-i18n="login">
+            लॉग इन (Login)
+          </button>
+          <button onclick="navigateTo('role_select')" class="px-4 py-1.5 text-xs font-bold bg-emerald-800 hover:bg-emerald-900 text-white rounded-lg shadow-sm hover:shadow transition flex items-center gap-1" data-i18n="register">
+            <span>रजिस्टर करें</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+
+        <!-- Authenticated Profile Capsule -->
+        <div id="auth-actions" class="hidden items-center gap-3">
+          <!-- Notification Bell -->
+          <button onclick="toggleNotifications()" class="relative p-2 rounded-full text-slate-600 hover:bg-slate-100 transition">
+            <i data-lucide="bell" class="w-4 h-4"></i>
+            <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+          </button>
+
+          <!-- User Capsule with Avatar -->
+          <div onclick="navigateTo('profile')" class="flex items-center gap-2.5 pl-2 pr-3 py-1 rounded-full border border-slate-200 hover:border-emerald-600 cursor-pointer bg-white shadow-sm transition">
+            <div id="user-avatar" class="w-7 h-7 rounded-full bg-gradient-to-tr from-amber-400 to-emerald-600 text-white font-bold flex items-center justify-center text-xs shadow-inner">
+              P
+            </div>
+            <div class="text-left hidden sm:block">
+              <p id="user-display-name" class="text-xs font-bold text-slate-800 leading-tight">Priya Kumari</p>
+              <p id="user-sub-label" class="text-[10px] text-slate-500 leading-tight">Class 12 • Ayodhya, UP</p>
+            </div>
+          </div>
+
+          <!-- Mobile Nav Toggle -->
+          <button onclick="toggleMobileSidebar()" class="lg:hidden p-2 rounded-lg text-slate-700 hover:bg-slate-100">
+            <i data-lucide="menu" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= NOTIFICATION FLYOUT ================= -->
+  <div id="notification-flyout" class="hidden fixed right-4 top-20 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-slate-200 p-4 z-50">
+    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+      <div class="flex items-center gap-2">
+        <i data-lucide="bell-ring" class="w-4 h-4 text-emerald-700"></i>
+        <h4 class="text-xs font-bold text-slate-800" data-i18n="notificationsTitle">सूचनाएँ और अपडेट (Notifications)</h4>
+      </div>
+      <button onclick="toggleNotifications()" class="text-slate-400 hover:text-slate-600">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+    </div>
+    <div class="divide-y divide-slate-100 max-h-72 overflow-y-auto text-xs py-1 custom-scrollbar">
+      <div class="py-2.5 flex items-start gap-3">
+        <span class="w-2 h-2 mt-1 rounded-full bg-emerald-600 shrink-0"></span>
+        <div>
+          <p class="font-semibold text-slate-800">राष्ट्रीय छात्रवृत्ति पोर्टल (NSP) की अंतिम तिथि नजदीक है</p>
+          <p class="text-[11px] text-slate-500 mt-0.5">कक्षा 12 और आईटीआई छात्रों के लिए ₹20,000 की छात्रवृत्ति के लिए 5 दिन शेष।</p>
+          <span class="text-[10px] text-slate-400">2 घंटे पहले</span>
+        </div>
+      </div>
+      <div class="py-2.5 flex items-start gap-3">
+        <span class="w-2 h-2 mt-1 rounded-full bg-amber-500 shrink-0"></span>
+        <div>
+          <p class="font-semibold text-slate-800">नया मार्गदर्शक सत्र स्वीकृत!</p>
+          <p class="text-[11px] text-slate-500 mt-0.5">अनन्या सेन (Mentor) ने आपके करियर मार्गदर्शन अनुरोध को स्वीकार कर लिया है।</p>
+          <span class="text-[10px] text-slate-400">कल</span>
+        </div>
+      </div>
+      <div class="py-2.5 flex items-start gap-3">
+        <span class="w-2 h-2 mt-1 rounded-full bg-slate-300 shrink-0"></span>
+        <div>
+          <p class="font-semibold text-slate-800">माइलस्टोन पूरा हुआ: बेसिक इलेक्ट्रॉनिक्स</p>
+          <p class="text-[11px] text-slate-500 mt-0.5">+50 XP प्राप्त हुआ! अपना बैज देखें।</p>
+          <span class="text-[10px] text-slate-400">2 दिन पहले</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MAIN APP VIEWPORT CONTAINER ================= -->
+  <main class="flex-1 flex flex-col relative w-full">
+
+    <!-- PAGE 1: PUBLIC LANDING PAGE (Matches image_a26a59.jpg) -->
+    <section id="view-landing" class="w-full">
+      
+      <!-- Hero Section -->
+      <div class="relative overflow-hidden bg-gradient-to-b from-emerald-50/70 via-slate-50 to-white pt-8 pb-16 lg:pt-14 lg:pb-24 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            <!-- Left Copy -->
+            <div class="lg:col-span-7 space-y-6 text-left">
+              
+              <!-- Badge -->
+              <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-100/90 border border-emerald-300 text-emerald-900 text-xs font-semibold shadow-sm">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-emerald-700"></i>
+                <span data-i18n="heroBadge">ग्रामीण भारत के युवाओं के लिए समर्पित</span>
+              </div>
+
+              <!-- Main Heading -->
+              <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-[1.2]">
+                <span class="block" data-i18n="heroH1">आपकी पृष्ठभूमि,</span>
+                <span class="text-emerald-800 underline decoration-emerald-400 decoration-wavy decoration-2" data-i18n="heroH2">आपके भविष्य की सीमा नहीं है।</span>
+              </h1>
+
+              <!-- Subtitle -->
+              <p class="text-base sm:text-lg text-slate-600 max-w-2xl leading-relaxed" data-i18n="heroSub">
+                अपनी रुचियों को खोजें, जरूरी कौशल सीखें और शिक्षा, छात्रवृत्ति व स्थानीय रोजगार के अवसरों तक अपनी भाषा में, अपने समय के अनुसार पहुँचें।
+              </p>
+
+              <!-- CTA Buttons -->
+              <div class="flex flex-wrap items-center gap-3 pt-2">
+                <button onclick="navigateTo('role_select')" class="px-6 py-3.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-sm shadow-lg shadow-emerald-900/20 hover:shadow-xl transition flex items-center gap-2.5 group">
+                  <span data-i18n="heroCta">आज ही शुरुआत करें (Start Journey)</span>
+                  <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                </button>
+                <button onclick="openVideoModal()" class="px-5 py-3.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-semibold text-sm shadow-sm transition flex items-center gap-2">
+                  <i data-lucide="play-circle" class="w-4 h-4 text-emerald-700"></i>
+                  <span data-i18n="heroVideoBtn">वीडियो देखें (Watch Video)</span>
+                </button>
+              </div>
+
+              <!-- Metrics Strip (From Reference Image) -->
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 border-t border-slate-200/80">
+                <div class="flex items-center gap-2.5 p-2 rounded-lg bg-white/70 border border-slate-200">
+                  <div class="p-2 bg-emerald-100 rounded-lg text-emerald-800"><i data-lucide="users" class="w-4 h-4"></i></div>
+                  <div>
+                    <p class="text-xs font-bold text-slate-900">10 लाख+</p>
+                    <p class="text-[10px] text-slate-500" data-i18n="stat1">छात्रों का लक्ष्य</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2.5 p-2 rounded-lg bg-white/70 border border-slate-200">
+                  <div class="p-2 bg-amber-100 rounded-lg text-amber-800"><i data-lucide="book-open" class="w-4 h-4"></i></div>
+                  <div>
+                    <p class="text-xs font-bold text-slate-900">विविध करियर</p>
+                    <p class="text-[10px] text-slate-500" data-i18n="stat2">STEM व वोकेशनल</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2.5 p-2 rounded-lg bg-white/70 border border-slate-200">
+                  <div class="p-2 bg-blue-100 rounded-lg text-blue-800"><i data-lucide="globe" class="w-4 h-4"></i></div>
+                  <div>
+                    <p class="text-xs font-bold text-slate-900">भारतीय भाषाएँ</p>
+                    <p class="text-[10px] text-slate-500" data-i18n="stat3">हिन्दी, अंग्रेजी व अन्य</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2.5 p-2 rounded-lg bg-white/70 border border-slate-200">
+                  <div class="p-2 bg-emerald-100 rounded-lg text-emerald-800"><i data-lucide="shield-check" class="w-4 h-4"></i></div>
+                  <div>
+                    <p class="text-xs font-bold text-slate-900">विश्वसनीय स्रोत</p>
+                    <p class="text-[10px] text-slate-500" data-i18n="stat4">सरकारी मान्यता प्राप्त</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Right Visual Graphic (Illustration Card) -->
+            <div class="lg:col-span-5 relative">
+              <div class="relative mx-auto max-w-md rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-gradient-to-tr from-emerald-800 via-emerald-700 to-teal-800 p-6 text-white text-left">
+                <!-- Background decorative shapes -->
+                <div class="absolute -right-10 -bottom-10 w-44 h-44 bg-emerald-500/20 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="absolute -left-10 -top-10 w-44 h-44 bg-amber-400/20 rounded-full blur-2xl pointer-events-none"></div>
+
+                <div class="flex items-center justify-between mb-4">
+                  <span class="px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-[11px] font-semibold tracking-wide">
+                    🇮🇳 Udaan AI Prototype
+                  </span>
+                  <span class="text-xs bg-amber-400 text-amber-950 font-bold px-2 py-0.5 rounded-md">
+                    2026 Edition
+                  </span>
+                </div>
+
+                <!-- Simulation Graphic -->
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 mb-4 space-y-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-white text-emerald-800 font-bold flex items-center justify-center text-sm shadow">
+                      👩‍🎓
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-sm text-white">प्रिया कुमारी (Priya Kumari)</h4>
+                      <p class="text-[11px] text-emerald-200">अयोध्या, उत्तर प्रदेश • कक्षा 12</p>
+                    </div>
+                  </div>
+                  <div class="p-2.5 rounded-xl bg-black/20 text-xs text-emerald-100 flex items-start gap-2">
+                    <i data-lucide="bot" class="w-4 h-4 text-emerald-300 shrink-0 mt-0.5"></i>
+                    <p>"आपके उत्तरों के अनुसार: <b class="text-white">सोलर पीवी तकनीशियन (Solar PV)</b> व <b class="text-white">डिजिटल सेवा केंद्र</b> आपके लिए श्रेष्ठ विकल्प हैं!"</p>
+                  </div>
+                  <div class="flex items-center justify-between text-[11px] pt-1">
+                    <span class="text-emerald-200">करियर मैच स्कोर:</span>
+                    <span class="font-bold text-amber-300">96% उपयुक्तता (Fit)</span>
+                  </div>
+                  <div class="w-full bg-black/30 h-2 rounded-full overflow-hidden">
+                    <div class="bg-gradient-to-r from-amber-400 to-emerald-400 h-full w-[96%]"></div>
+                  </div>
+                </div>
+
+                <!-- Floating Quote Card -->
+                <div class="p-3 bg-white text-slate-800 rounded-xl shadow-lg flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+                    <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+                  </div>
+                  <p class="text-xs font-semibold leading-snug">
+                    "गाँव से भी बड़े सपने मुमकिन हैं!"
+                    <span class="block text-[10px] text-slate-500 font-normal">सरकारी आईटीआई और स्कॉलरशिप अब एक ही जगह।</span>
+                  </p>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Section: How Udaan Works (5-Step Pipeline from image_a26a59.jpg) -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900" data-i18n="howItWorksTitle">Udaan कैसे काम करता है?</h2>
+          <p class="text-sm text-slate-600 mt-2" data-i18n="howItWorksSub">रुचि से लेकर स्थानीय रोजगार व अवसर तक एक सम्पूर्ण यात्रा</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 relative">
+          <!-- Step 1 -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition text-left relative flex flex-col justify-between group hover:border-emerald-500">
+            <div>
+              <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center mb-3 font-bold group-hover:scale-110 transition-transform">
+                <i data-lucide="compass" class="w-5 h-5"></i>
+              </div>
+              <h3 class="font-bold text-sm text-slate-800 mb-1" data-i18n="step1Title">1. खोजें (Discover)</h3>
+              <p class="text-xs text-slate-500 leading-relaxed" data-i18n="step1Desc">अपनी रुचियों, ताकत और पारिवारिक प्राथमिकताओं को समझें।</p>
+            </div>
+            <div class="mt-4 pt-2 border-t border-slate-100 text-[10px] font-semibold text-emerald-700 flex items-center gap-1">
+              <span>AI चैट या वॉइस द्वारा</span>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition text-left relative flex flex-col justify-between group hover:border-amber-500">
+            <div>
+              <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center mb-3 font-bold group-hover:scale-110 transition-transform">
+                <i data-lucide="lightbulb" class="w-5 h-5"></i>
+              </div>
+              <h3 class="font-bold text-sm text-slate-800 mb-1" data-i18n="step2Title">2. विकल्प जानें (Explore)</h3>
+              <p class="text-xs text-slate-500 leading-relaxed" data-i18n="step2Desc">आपके लिए उपयुक्त विभिन्न करियर पथ व तुलनात्मक रिपोर्ट पाएँ।</p>
+            </div>
+            <div class="mt-4 pt-2 border-t border-slate-100 text-[10px] font-semibold text-amber-700 flex items-center gap-1">
+              <span>व्यावहारिक विकल्प</span>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition text-left relative flex flex-col justify-between group hover:border-blue-500">
+            <div>
+              <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center mb-3 font-bold group-hover:scale-110 transition-transform">
+                <i data-lucide="book-marked" class="w-5 h-5"></i>
+              </div>
+              <h3 class="font-bold text-sm text-slate-800 mb-1" data-i18n="step3Title">3. कौशल सीखें (Learn)</h3>
+              <p class="text-xs text-slate-500 leading-relaxed" data-i18n="step3Desc">स्थानीय आईटीआई, कोर्सेज और सत्यापित शिक्षकों के साथ जुड़ें।</p>
+            </div>
+            <div class="mt-4 pt-2 border-t border-slate-100 text-[10px] font-semibold text-blue-700 flex items-center gap-1">
+              <span>ऑनलाइन व ऑफलाइन</span>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition text-left relative flex flex-col justify-between group hover:border-rose-500">
+            <div>
+              <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-800 flex items-center justify-center mb-3 font-bold group-hover:scale-110 transition-transform">
+                <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
+              </div>
+              <h3 class="font-bold text-sm text-slate-800 mb-1" data-i18n="step4Title">4. अनुभव बनाएँ (Plan)</h3>
+              <p class="text-xs text-slate-500 leading-relaxed" data-i18n="step4Desc">प्रैक्टिकल प्रोजेक्ट, प्रमाण-पत्र और पोर्टफोलियो तैयार करें।</p>
+            </div>
+            <div class="mt-4 pt-2 border-t border-slate-100 text-[10px] font-semibold text-rose-700 flex items-center gap-1">
+              <span>सत्यापित माइलस्टोन</span>
+            </div>
+          </div>
+
+          <!-- Step 5 -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition text-left relative flex flex-col justify-between group hover:border-emerald-600">
+            <div>
+              <div class="w-10 h-10 rounded-xl bg-emerald-800 text-white flex items-center justify-center mb-3 font-bold group-hover:scale-110 transition-transform">
+                <i data-lucide="briefcase" class="w-5 h-5"></i>
+              </div>
+              <h3 class="font-bold text-sm text-slate-800 mb-1" data-i18n="step5Title">5. अवसर पाएँ (Advance)</h3>
+              <p class="text-xs text-slate-500 leading-relaxed" data-i18n="step5Desc">छात्रवृत्ति, अप्रेंटिसशिप, सरकारी परीक्षाएं और नौकरी के अवसर।</p>
+            </div>
+            <div class="mt-4 pt-2 border-t border-slate-100 text-[10px] font-semibold text-emerald-800 flex items-center gap-1">
+              <span>सीधी प्रगति</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Section: Career Domains Grid (Exact Domains from Document Blueprint) -->
+      <div class="bg-slate-50/80 py-16 border-y border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+            <div>
+              <h2 class="text-2xl font-black text-slate-900" data-i18n="domainsTitle">करियर विकल्पों की विस्तृत दुनिया</h2>
+              <p class="text-xs sm:text-sm text-slate-600 mt-1" data-i18n="domainsSub">सिर्फ लोकप्रिय नौकरियां नहीं, बल्कि ग्रामीण और उभरते आधुनिक क्षेत्र</p>
+            </div>
+            <button onclick="navigateTo('explore_careers')" class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-800 hover:text-emerald-900">
+              <span data-i18n="seeAllCareers">सभी करियर विकल्प देखें</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <!-- 1. Technology -->
+            <div onclick="selectDomainFilter('tech')" class="p-5 rounded-2xl bg-white border border-slate-200 hover:border-emerald-600 cursor-pointer shadow-sm hover:shadow-md transition">
+              <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-3">
+                <i data-lucide="laptop" class="w-5 h-5"></i>
+              </div>
+              <h4 class="font-bold text-sm text-slate-900">प्रौद्योगिकी और डिजिटल (Technology)</h4>
+              <p class="text-xs text-slate-500 mt-1 leading-relaxed">वेब डेवलपमेंट, डेटा एंट्री, सीएससी ऑपरेटर, आईटी सपोर्ट, साइबर सुरक्षा बेसिक्स।</p>
+            </div>
+
+            <!-- 2. Agri & Rural Enterprise -->
+            <div onclick="selectDomainFilter('agri')" class="p-5 rounded-2xl bg-white border border-slate-200 hover:border-emerald-600 cursor-pointer shadow-sm hover:shadow-md transition">
+              <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-3">
+                <i data-lucide="sprout" class="w-5 h-5"></i>
+              </div>
+              <h4 class="font-bold text-sm text-slate-900">कृषि और ग्रामीण उद्योग (Agriculture)</h4>
+              <p class="text-xs text-slate-500 mt-1 leading-relaxed">कृषि विस्तार, आधुनिक सिंचाई, बागवानी, डेयरी प्रबंधन, खाद्य प्रसंस्करण।</p>
+            </div>
+
+            <!-- 3. Skilled Trades -->
+            <div onclick="selectDomainFilter('trades')" class="p-5 rounded-2xl bg-white border border-slate-200 hover:border-emerald-600 cursor-pointer shadow-sm hover:shadow-md transition">
+              <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center mb-3">
+                <i data-lucide="wrench" class="w-5 h-5"></i>
+              </div>
+              <h4 class="font-bold text-sm text-slate-900">कुशल तकनीकी कार्य (Skilled Trades)</h4>
+              <p class="text-xs text-slate-500 mt-1 leading-relaxed">इलेक्ट्रीशियन, सोलर पीवी तकनीशियन, मोटर मैकेनिक, प्लंबिंग, आरएसी रिपेयर।</p>
+            </div>
+
+            <!-- 4. Creative & Service -->
+            <div onclick="selectDomainFilter('creative')" class="p-5 rounded-2xl bg-white border border-slate-200 hover:border-emerald-600 cursor-pointer shadow-sm hover:shadow-md transition">
+              <div class="w-10 h-10 rounded-xl bg-pink-50 text-pink-600 flex items-center justify-center mb-3">
+                <i data-lucide="palette" class="w-5 h-5"></i>
+              </div>
+              <h4 class="font-bold text-sm text-slate-900">रचनात्मक और सेवा क्षेत्र (Creative & Services)</h4>
+              <p class="text-xs text-slate-500 mt-1 leading-relaxed">सिलाई और बुटीक, ग्राफिक डिजाइन, स्थानीय पर्यटन गाइड, मीडिया और व्लॉगिंग।</p>
+            </div>
+
+            <!-- 5. Healthcare -->
+            <div onclick="selectDomainFilter('health')" class="p-5 rounded-2xl bg-white border border-slate-200 hover:border-emerald-600 cursor-pointer shadow-sm hover:shadow-md transition">
+              <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center mb-3">
+                <i data-lucide="heart-pulse" class="w-5 h-5"></i>
+              </div>
+              <h4 class="font-bold text-sm text-slate-900">स्वास्थ्य और देखभाल (Healthcare)</h4>
+              <p class="text-xs text-slate-500 mt-1 leading-relaxed">सामुदायिक स्वास्थ्य सहायक, लैब तकनीशियन, प्राथमिक उपचार एवं फार्मेसी सहायक।</p>
+            </div>
+
+            <!-- 6. Business & Enterprise -->
+            <div onclick="selectDomainFilter('biz')" class="p-5 rounded-2xl bg-white border border-slate-200 hover:border-emerald-600 cursor-pointer shadow-sm hover:shadow-md transition">
+              <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-3">
+                <i data-lucide="coins" class="w-5 h-5"></i>
+              </div>
+              <h4 class="font-bold text-sm text-slate-900">व्यवसाय और उद्यमिता (Business & Banking)</h4>
+              <p class="text-xs text-slate-500 mt-1 leading-relaxed">ग्रामीण बैंक मित्र, बुककीपिंग (Tally), खुदरा दुकान प्रबंधन, माइक्रो-फाइनेंस।</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="bg-white border-t border-slate-200 py-10 text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-slate-800">Project Udaan</span>
+            <span>• Built for Citi Hackathon 2026 Prototype</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <a href="#" class="hover:text-emerald-800">Privacy Policy</a>
+            <a href="#" class="hover:text-emerald-800">Accessibility</a>
+            <a href="#" class="hover:text-emerald-800">Help & Support</a>
+            <a href="#" class="hover:text-emerald-800">Contact Team</a>
+          </div>
+        </div>
+      </footer>
+
+    </section>
+
+    <!-- PAGE 2: ROLE SELECTION (Matches उड़ाान_ भूमिका चयन और अवसर.png) -->
+    <section id="view-role-select" class="hidden max-w-6xl mx-auto px-4 py-8 sm:py-12 w-full">
+      <div class="mb-4">
+        <button onclick="navigateTo('landing')" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-emerald-800">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span data-i18n="backToHome">वापस जाएँ (Back to Home)</span>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left Role Cards (5 Roles from Blueprint) -->
+        <div class="lg:col-span-7 space-y-4 text-left">
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900" data-i18n="chooseRoleTitle">खाता बनाएँ (Choose Your Role)</h2>
+            <p class="text-xs sm:text-sm text-slate-600 mt-1" data-i18n="chooseRoleSub">अपनी भूमिका चुनें ताकि हम आपको सबसे अनुकूल व सुरक्षित अनुभव दे सकें।</p>
+          </div>
+
+          <div class="space-y-3 pt-2">
+            
+            <!-- 1. Student -->
+            <div onclick="selectRoleAndRegister('student')" class="p-4 rounded-2xl bg-white border-2 border-emerald-500/40 hover:border-emerald-600 bg-emerald-50/20 shadow-sm hover:shadow-md cursor-pointer transition flex items-center justify-between group">
+              <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-2xl bg-emerald-100 flex items-center justify-center text-2xl shadow-inner shrink-0">
+                  👩‍🎓
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <h3 class="font-bold text-slate-900 text-sm" data-i18n="roleStudent">छात्र / शिक्षार्थी (Student)</h3>
+                    <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded">अनुशंसित (Recommended)</span>
+                  </div>
+                  <p class="text-xs text-slate-500 mt-0.5" data-i18n="roleStudentDesc">करियर खोजें, कौशल सीखें, शिक्षकों और मेंटर्स से जुड़ें और छात्रवृत्ति पाएँ।</p>
+                </div>
+              </div>
+              <div class="w-9 h-9 rounded-full bg-emerald-800 text-white flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                <i data-lucide="chevron-right" class="w-5 h-5"></i>
+              </div>
+            </div>
+
+            <!-- 2. Teacher / Facilitator -->
+            <div onclick="selectRoleAndRegister('facilitator')" class="p-4 rounded-2xl bg-white border border-slate-200 hover:border-emerald-600 shadow-sm hover:shadow-md cursor-pointer transition flex items-center justify-between group">
+              <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-2xl bg-amber-100 flex items-center justify-center text-2xl shadow-inner shrink-0">
+                  👩‍🏫
+                </div>
+                <div>
+                  <h3 class="font-bold text-slate-900 text-sm" data-i18n="roleTeacher">शिक्षक / सुविधा प्रदाता (Facilitator)</h3>
+                  <p class="text-xs text-slate-500 mt-0.5" data-i18n="roleTeacherDesc">कोर्स बनाएँ, छात्रों को पढ़ाएँ, उनकी सहमति पर प्रगति देखें व व्यावहारिक प्रशिक्षण दें।</p>
+                </div>
+              </div>
+              <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-800 group-hover:text-white transition">
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+              </div>
+            </div>
+
+            <!-- 3. Mentor -->
+            <div onclick="selectRoleAndRegister('mentor')" class="p-4 rounded-2xl bg-white border border-slate-200 hover:border-emerald-600 shadow-sm hover:shadow-md cursor-pointer transition flex items-center justify-between group">
+              <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-2xl bg-blue-100 flex items-center justify-center text-2xl shadow-inner shrink-0">
+                  👨‍💼
+                </div>
+                <div>
+                  <h3 class="font-bold text-slate-900 text-sm" data-i18n="roleMentor">मेंटर (Career Mentor)</h3>
+                  <p class="text-xs text-slate-500 mt-0.5" data-i18n="roleMentorDesc">करियर मार्गदर्शन दें, छात्रों को साक्षात्कार और उद्योग की समझ में मदद करें।</p>
+                </div>
+              </div>
+              <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-800 group-hover:text-white transition">
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+              </div>
+            </div>
+
+            <!-- 4. Employer / Provider -->
+            <div onclick="selectRoleAndRegister('provider')" class="p-4 rounded-2xl bg-white border border-slate-200 hover:border-emerald-600 shadow-sm hover:shadow-md cursor-pointer transition flex items-center justify-between group">
+              <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-2xl bg-purple-100 flex items-center justify-center text-2xl shadow-inner shrink-0">
+                  🏭
+                </div>
+                <div>
+                  <h3 class="font-bold text-slate-900 text-sm" data-i18n="roleEmployer">नियोक्ता / प्रशिक्षण संस्थान (Provider)</h3>
+                  <p class="text-xs text-slate-500 mt-0.5" data-i18n="roleEmployerDesc">इंटर्नशिप, अप्रेंटिसशिप, प्रशिक्षण कार्यक्रम और नौकरियां सूचीबद्ध करें।</p>
+                </div>
+              </div>
+              <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-800 group-hover:text-white transition">
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+              </div>
+            </div>
+
+            <!-- 5. Admin -->
+            <div onclick="selectRoleAndRegister('admin')" class="p-4 rounded-2xl bg-white border border-slate-200 hover:border-emerald-600 shadow-sm hover:shadow-md cursor-pointer transition flex items-center justify-between group">
+              <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-2xl bg-slate-200 flex items-center justify-center text-2xl shadow-inner shrink-0">
+                  🏛️
+                </div>
+                <div>
+                  <h3 class="font-bold text-slate-900 text-sm" data-i18n="roleAdmin">प्रशासक (Admin / Govt Partner)</h3>
+                  <p class="text-xs text-slate-500 mt-0.5" data-i18n="roleAdminDesc">प्लेटफॉर्म का प्रबंधन करें, सत्यापन, सुरक्षा और गुणवत्ता बनाए रखें।</p>
+                </div>
+              </div>
+              <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-800 group-hover:text-white transition">
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-800 flex items-start gap-2">
+            <i data-lucide="info" class="w-4 h-4 text-amber-600 shrink-0 mt-0.5"></i>
+            <p><strong>गोपनीयता नियम:</strong> शिक्षक और नियोक्ता छात्रों के डेटा को बिना उनकी स्पष्ट सहमति के नहीं देख सकते। छात्र की सुरक्षा हमारी सर्वोच्च प्राथमिकता है।</p>
+          </div>
+        </div>
+
+        <!-- Right Side Banner (Matches reference graphic "हर भूमिका, एक साझा उद्देश्य") -->
+        <div class="lg:col-span-5 bg-gradient-to-br from-emerald-50 to-emerald-100/60 p-6 sm:p-8 rounded-3xl border border-emerald-200 text-left">
+          <div class="inline-block px-3 py-1 rounded-full bg-white text-emerald-800 font-bold text-xs shadow-sm mb-4">
+            Udaan के साथ
+          </div>
+          <h3 class="text-xl sm:text-2xl font-black text-slate-900 mb-2">हर भूमिका, एक साझा उद्देश्य</h3>
+          <p class="text-xs sm:text-sm text-slate-600 mb-6">ग्रामीण भारत के युवाओं के लिए बेहतर शिक्षा, कौशल और सम्मानजनक अवसर तैयार करने में मिलकर काम करें।</p>
+
+          <div class="space-y-4">
+            <div class="p-3.5 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold shrink-0">
+                <i data-lucide="sparkles" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h5 class="text-xs font-bold text-slate-800">व्यक्तिगत विकास</h5>
+                <p class="text-[11px] text-slate-500">अपनी रुचियों के अनुसार सीखने के अवसर पाएँ</p>
+              </div>
+            </div>
+
+            <div class="p-3.5 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-bold shrink-0">
+                <i data-lucide="wrench" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h5 class="text-xs font-bold text-slate-800">व्यावहारिक कौशल</h5>
+                <p class="text-[11px] text-slate-500">स्थानीय आईटीआई और ऑनलाइन वर्कशॉप से सीखें</p>
+              </div>
+            </div>
+
+            <div class="p-3.5 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg bg-blue-100 text-blue-800 flex items-center justify-center font-bold shrink-0">
+                <i data-lucide="briefcase" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h5 class="text-xs font-bold text-slate-800">वास्तविक अवसर</h5>
+                <p class="text-[11px] text-slate-500">सरकारी छात्रवृत्तियां और स्थानीय नौकरियां</p>
+              </div>
+            </div>
+
+            <div class="p-3.5 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg bg-emerald-800 text-white flex items-center justify-center font-bold shrink-0">
+                <i data-lucide="shield-check" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h5 class="text-xs font-bold text-slate-800">सुरक्षित और विश्वसनीय</h5>
+                <p class="text-[11px] text-slate-500">प्रमाणित संस्थान और सुरक्षित प्लेटफॉर्म</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PAGE 3: STUDENT ONBOARDING (Matches Udaan Student Registration Interface.png) -->
+    <section id="view-student-register" class="hidden max-w-5xl mx-auto px-4 py-8 sm:py-12 w-full">
+      <div class="mb-4">
+        <button onclick="navigateTo('role_select')" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-emerald-800">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span>भूमिका चयन पर वापस जाएँ (Back to Role Selection)</span>
+        </button>
+      </div>
+
+      <!-- Stepper Header -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm mb-6">
+        <div class="flex items-center justify-between mb-6 relative">
+          <div class="absolute left-6 right-6 top-1/2 -translate-y-1/2 h-1 bg-slate-200 z-0"></div>
+          <div id="step-progress-bar" class="absolute left-6 top-1/2 -translate-y-1/2 h-1 bg-emerald-600 transition-all duration-300 z-0 w-0"></div>
+
+          <!-- Step 1 -->
+          <div class="relative z-10 flex flex-col items-center">
+            <div id="step-badge-1" class="w-8 h-8 rounded-full bg-emerald-700 text-white font-bold text-xs flex items-center justify-center ring-4 ring-white shadow">1</div>
+            <span class="text-[11px] font-semibold text-slate-700 mt-1">मोड चुनें (Mode)</span>
+          </div>
+          <!-- Step 2 -->
+          <div class="relative z-10 flex flex-col items-center">
+            <div id="step-badge-2" class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 font-bold text-xs flex items-center justify-center ring-4 ring-white shadow">2</div>
+            <span class="text-[11px] font-semibold text-slate-500 mt-1">व्यक्तिगत विवरण</span>
+          </div>
+          <!-- Step 3 -->
+          <div class="relative z-10 flex flex-col items-center">
+            <div id="step-badge-3" class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 font-bold text-xs flex items-center justify-center ring-4 ring-white shadow">3</div>
+            <span class="text-[11px] font-semibold text-slate-500 mt-1">शिक्षा व स्थान</span>
+          </div>
+          <!-- Step 4 -->
+          <div class="relative z-10 flex flex-col items-center">
+            <div id="step-badge-4" class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 font-bold text-xs flex items-center justify-center ring-4 ring-white shadow">4</div>
+            <span class="text-[11px] font-semibold text-slate-500 mt-1">सुविधा व बजट</span>
+          </div>
+          <!-- Step 5 -->
+          <div class="relative z-10 flex flex-col items-center">
+            <div id="step-badge-5" class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 font-bold text-xs flex items-center justify-center ring-4 ring-white shadow">5</div>
+            <span class="text-[11px] font-semibold text-slate-500 mt-1">समीक्षा (Review)</span>
+          </div>
+        </div>
+
+        <!-- ONBOARDING STEP 1: CHOOSE REGISTRATION MODE -->
+        <div id="onboard-step-1" class="text-left space-y-6">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900">आप कैसे पंजीकरण करना चाहेंगे?</h2>
+            <p class="text-xs text-slate-600 mt-1">वह मोड चुनें जो आपके लिए सबसे आसान और सुविधाजनक हो। आप इसे बाद में बदल सकते हैं।</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <!-- Text Mode Card -->
+            <div onclick="selectOnboardingMode('text')" class="p-6 rounded-2xl border-2 border-emerald-600 bg-emerald-50/20 hover:bg-emerald-50/40 cursor-pointer transition text-left flex flex-col justify-between shadow-sm">
+              <div>
+                <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center mb-4">
+                  <i data-lucide="keyboard" class="w-6 h-6"></i>
+                </div>
+                <h3 class="font-bold text-base text-slate-900">टेक्स्ट मोड (Text Form Mode)</h3>
+                <p class="text-xs text-slate-600 mt-1">अपनी गति से स्क्रीन पर सीधे फॉर्म भरकर अपनी जानकारी दर्ज करें।</p>
+                <ul class="text-xs text-slate-600 space-y-1.5 mt-4">
+                  <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-600"></i> इस्तेमाल में बेहद सरल</li>
+                  <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-600"></i> जवाबों को कभी भी सुधारें</li>
+                  <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-600"></i> कम इंटरनेट में भी तेज गति</li>
+                </ul>
+              </div>
+              <button class="mt-6 w-full py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs flex items-center justify-center gap-2 shadow">
+                <span>टेक्स्ट मोड से आगे बढ़ें</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+
+            <!-- Voice Mode Card -->
+            <div onclick="selectOnboardingMode('voice')" class="p-6 rounded-2xl border-2 border-slate-200 hover:border-emerald-500 bg-white hover:bg-slate-50 cursor-pointer transition text-left flex flex-col justify-between shadow-sm">
+              <div>
+                <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center mb-4">
+                  <i data-lucide="mic" class="w-6 h-6"></i>
+                </div>
+                <h3 class="font-bold text-base text-slate-900">वॉइस मोड (Interactive Voice Mode)</h3>
+                <p class="text-xs text-slate-600 mt-1">हमारे एआई सहायक से बोलकर बात करें। वह आपकी मातृभाषा में सवाल पूछेगा।</p>
+                <ul class="text-xs text-slate-600 space-y-1.5 mt-4">
+                  <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-blue-600"></i> बोलकर आसानी से उत्तर दें</li>
+                  <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-blue-600"></i> भारतीय भाषाओं का पूरा समर्थन</li>
+                  <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-blue-600"></i> टाइपिंग की जरूरत नहीं</li>
+                </ul>
+              </div>
+              <button class="mt-6 w-full py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs flex items-center justify-center gap-2 shadow">
+                <span>वॉइस मोड से आगे बढ़ें</span>
+                <i data-lucide="mic" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-600 flex items-center gap-2">
+            <i data-lucide="info" class="w-4 h-4 text-emerald-700 shrink-0"></i>
+            <span>आप बाद में भी कभी भी वॉइस या टेक्स्ट मोड में स्विच कर सकते हैं।</span>
+          </div>
+        </div>
+
+        <!-- ONBOARDING STEP 2: BASIC DETAILS -->
+        <div id="onboard-step-2" class="hidden text-left space-y-4">
+          <h2 class="text-xl font-bold text-slate-900">बुनियादी व्यक्तिगत विवरण (Personal Details)</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">आपका पूरा नाम (Full Name) *</label>
+              <input type="text" id="reg-name" value="प्रिया कुमारी (Priya Kumari)" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">मोबाइल नंबर / ईमेल (Mobile or Email) *</label>
+              <input type="text" id="reg-contact" value="9876543210" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">आयु (Age) *</label>
+              <select id="reg-age" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:outline-none">
+                <option value="17">17 वर्ष</option>
+                <option value="18" selected>18 वर्ष</option>
+                <option value="19">19 वर्ष</option>
+                <option value="20+">20+ वर्ष</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">पसंदीदा भाषा (Preferred Language) *</label>
+              <select id="reg-lang" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:outline-none">
+                <option value="hi" selected>हिन्दी (Hindi)</option>
+                <option value="en">English</option>
+                <option value="mr">मराठी (Marathi)</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="flex justify-between pt-4">
+            <button onclick="goToOnboardStep(1)" class="px-4 py-2 text-xs font-semibold rounded-xl border border-slate-300 hover:bg-slate-100">पीछे (Back)</button>
+            <button onclick="goToOnboardStep(3)" class="px-5 py-2 text-xs font-bold rounded-xl bg-emerald-800 text-white hover:bg-emerald-900">आगे बढ़ें (Next)</button>
+          </div>
+        </div>
+
+        <!-- ONBOARDING STEP 3: EDUCATION & LOCATION -->
+        <div id="onboard-step-3" class="hidden text-left space-y-4">
+          <h2 class="text-xl font-bold text-slate-900">वर्तमान शिक्षा और स्थान (Education & Location)</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">आपकी उच्चतम शिक्षा (Education) *</label>
+              <select id="reg-edu" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:outline-none">
+                <option value="10th">10वीं पास (Class 10)</option>
+                <option value="12th" selected>12वीं कक्षा में अध्ययनरत / उत्तीर्ण (Class 12)</option>
+                <option value="iti">आईटीआई / डिप्लोमा (ITI / Diploma)</option>
+                <option value="college">कॉलेज / स्नातक (College / Graduate)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">वर्तमान स्थिति (Current Status) *</label>
+              <select id="reg-status" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:outline-none">
+                <option value="studying" selected>पढ़ाई कर रहे हैं (Studying)</option>
+                <option value="preparing">प्रतियोगी परीक्षा तैयारी (Exam Prep)</option>
+                <option value="seeking">काम की तलाश में हैं (Seeking Work)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">राज्य (State) *</label>
+              <input type="text" id="reg-state" value="उत्तर प्रदेश (Uttar Pradesh)" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">जिला / गाँव / पिन कोड (District / PIN) *</label>
+              <input type="text" id="reg-district" value="अयोध्या (Ayodhya) - 224001" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:outline-none">
+            </div>
+          </div>
+
+          <div class="flex justify-between pt-4">
+            <button onclick="goToOnboardStep(2)" class="px-4 py-2 text-xs font-semibold rounded-xl border border-slate-300 hover:bg-slate-100">पीछे (Back)</button>
+            <button onclick="goToOnboardStep(4)" class="px-5 py-2 text-xs font-bold rounded-xl bg-emerald-800 text-white hover:bg-emerald-900">आगे बढ़ें (Next)</button>
+          </div>
+        </div>
+
+        <!-- ONBOARDING STEP 4: LEARNING ACCESS & BUDGET -->
+        <div id="onboard-step-4" class="hidden text-left space-y-4">
+          <h2 class="text-xl font-bold text-slate-900">सुविधा, समय और बजट (Access & Preferences)</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">इंटरनेट और डिवाइस की उपलब्धता *</label>
+              <select id="reg-device" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:outline-none">
+                <option value="mobile" selected>स्मार्टफोन (दैनिक 1.5GB डेटा)</option>
+                <option value="pc">कंप्यूटर / लैपटॉप उपलब्ध</option>
+                <option value="shared">साझा फोन / कभी-कभी इंटरनेट</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">प्रति सप्ताह कितना समय दे सकते हैं? *</label>
+              <select id="reg-time" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:outline-none">
+                <option value="5-10">5 से 10 घंटे प्रति सप्ताह</option>
+                <option value="10-20" selected>10 से 20 घंटे प्रति सप्ताह</option>
+                <option value="full">फुल टाइम (20+ घंटे)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">सीखने का बजट (Budget) *</label>
+              <select id="reg-budget" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:outline-none">
+                <option value="free" selected>केवल नि:शुल्क (Free / Govt Sponsored only)</option>
+                <option value="low">कम लागत (Low cost &lt; ₹1,000)</option>
+                <option value="flexible">उचित शुल्क दे सकते हैं</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">सीखने का पसंदीदा माध्यम *</label>
+              <select id="reg-mode-pref" class="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:outline-none">
+                <option value="hybrid" selected>हाइब्रिड (ऑनलाइन + स्थानीय वर्कशॉप)</option>
+                <option value="offline">केवल नज़दीकी ऑफलाइन संस्थान</option>
+                <option value="online">पूर्ण रूप से मोबाइल से ऑनलाइन</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="flex justify-between pt-4">
+            <button onclick="goToOnboardStep(3)" class="px-4 py-2 text-xs font-semibold rounded-xl border border-slate-300 hover:bg-slate-100">पीछे (Back)</button>
+            <button onclick="goToOnboardStep(5)" class="px-5 py-2 text-xs font-bold rounded-xl bg-emerald-800 text-white hover:bg-emerald-900">समीक्षा करें (Review)</button>
+          </div>
+        </div>
+
+        <!-- ONBOARDING STEP 5: REVIEW & CREATE -->
+        <div id="onboard-step-5" class="hidden text-left space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-xl font-bold text-slate-900">विवरण की समीक्षा करें (Review Profile)</h2>
+              <p class="text-xs text-slate-500">पुष्टि करने से पहले अपने विवरण को जाँच लें। इसे बाद में भी बदला जा सकता है।</p>
+            </div>
+            <span class="text-xs font-bold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full">लगभग तैयार!</span>
+          </div>
+
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div>
+              <span class="text-slate-400">नाम:</span>
+              <p id="rev-name" class="font-bold text-slate-800">प्रिया कुमारी</p>
+            </div>
+            <div>
+              <span class="text-slate-400">शिक्षा:</span>
+              <p id="rev-edu" class="font-bold text-slate-800">कक्षा 12 (अध्ययनरत)</p>
+            </div>
+            <div>
+              <span class="text-slate-400">स्थान:</span>
+              <p id="rev-loc" class="font-bold text-slate-800">अयोध्या, उत्तर प्रदेश</p>
+            </div>
+            <div>
+              <span class="text-slate-400">बजट व समय:</span>
+              <p id="rev-budget" class="font-bold text-slate-800">नि:शुल्क (Free) • 10-20 घंटे/सप्ताह</p>
+            </div>
+          </div>
+
+          <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-emerald-900 flex items-start gap-2">
+            <input type="checkbox" id="consent-check" checked class="mt-0.5 rounded text-emerald-800 focus:ring-emerald-700">
+            <label for="consent-check" class="text-[11px] leading-relaxed">
+              मैं सहमत हूँ कि मेरी रुचियों के आधार पर करियर सिफारिशें तैयार की जाएँ। मेरी व्यक्तिगत जानकारी केवल मेरी अनुमति पर स्थानीय शिक्षकों को दिखाई जाएगी।
+            </label>
+          </div>
+
+          <div class="flex justify-between pt-4">
+            <button onclick="goToOnboardStep(4)" class="px-4 py-2 text-xs font-semibold rounded-xl border border-slate-300 hover:bg-slate-100">पीछे (Back)</button>
+            <button onclick="completeStudentRegistration()" class="px-6 py-2.5 text-xs font-bold rounded-xl bg-emerald-800 text-white hover:bg-emerald-900 shadow-md flex items-center gap-2">
+              <span>खाता बनाएँ व डैशबोर्ड पर जाएँ</span>
+              <i data-lucide="check-circle" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= AUTHENTICATED WRAPPER (SIDEBAR + CONTENT) ================= -->
+    <div id="authenticated-wrapper" class="hidden flex-1 flex w-full">
+      
+      <!-- DESKTOP & MOBILE SIDEBAR NAVIGATION (Matches WhatsApp Image reference) -->
+      <aside id="main-sidebar" class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between shrink-0 transition-all duration-200 z-30 hidden lg:flex">
+        
+        <div class="p-4 space-y-6">
+          
+          <!-- Student Mini Profile Card in Sidebar -->
+          <div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+            <div id="side-user-avatar" class="w-10 h-10 rounded-full bg-emerald-800 text-white font-bold flex items-center justify-center text-sm shadow">
+              PK
+            </div>
+            <div class="overflow-hidden text-left">
+              <h4 id="side-user-name" class="font-bold text-xs text-slate-900 truncate">Priya Kumari</h4>
+              <p id="side-user-role" class="text-[10px] text-emerald-700 font-semibold truncate">Student • Class 12</p>
+              <p id="side-user-loc" class="text-[10px] text-slate-500 truncate">Ayodhya, UP</p>
+            </div>
+          </div>
+
+          <!-- Navigation Links Section -->
+          <div class="space-y-1">
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-2" data-i18n="yourSpace">आपका स्थान (Your Space)</span>
+            
+            <nav id="sidebar-nav-links" class="mt-2 space-y-1 text-xs font-medium">
+              <!-- Injected dynamically based on role -->
+            </nav>
+          </div>
+
+          <!-- Account Section -->
+          <div class="space-y-1 pt-4 border-t border-slate-200">
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-2" data-i18n="account">खाता व सहायता (Account)</span>
+            <div class="space-y-1 mt-2 text-xs font-medium">
+              <button onclick="navigateTo('profile')" id="nav-profile" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-600 hover:bg-slate-100 transition">
+                <i data-lucide="user" class="w-4 h-4 text-slate-500"></i>
+                <span data-i18n="navProfile">मेरी प्रोफाइल (My Profile)</span>
+              </button>
+              <button onclick="navigateTo('settings')" id="nav-settings" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-600 hover:bg-slate-100 transition">
+                <i data-lucide="settings" class="w-4 h-4 text-slate-500"></i>
+                <span data-i18n="navSettings">सेटिंग्स (Settings)</span>
+              </button>
+              <button onclick="triggerHelpModal()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-600 hover:bg-slate-100 transition">
+                <i data-lucide="help-circle" class="w-4 h-4 text-slate-500"></i>
+                <span data-i18n="navHelp">मदद व सुझाव (Help & Support)</span>
+              </button>
+              <button onclick="logoutToLanding()" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-rose-600 hover:bg-rose-50 transition">
+                <i data-lucide="log-out" class="w-4 h-4 text-rose-500"></i>
+                <span data-i18n="navLogout">लॉग आउट (Logout)</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Sidebar Footer Banner (Gamification XP preview) -->
+        <div class="p-4 m-3 rounded-2xl bg-gradient-to-br from-emerald-800 to-emerald-950 text-white text-left shadow-md">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-bold text-emerald-200">सक्रिय स्ट्रीक 🔥</span>
+            <span class="text-xs bg-amber-400 text-amber-950 font-extrabold px-1.5 py-0.2 rounded">Level 2</span>
+          </div>
+          <div class="flex items-baseline gap-1">
+            <span class="text-lg font-black text-white" id="sidebar-xp">350</span>
+            <span class="text-[11px] text-emerald-300">XP अंक अर्जित</span>
+          </div>
+          <div class="w-full bg-emerald-900/60 h-1.5 rounded-full overflow-hidden mt-2">
+            <div class="bg-amber-400 h-full w-[70%]"></div>
+          </div>
+          <button onclick="navigateTo('gamification')" class="mt-3 w-full py-1.5 bg-white/10 hover:bg-white/20 text-white rounded-lg text-[10px] font-semibold text-center transition">
+            पुरस्कार व चुनौतियाँ देखें
+          </button>
+        </div>
+
+      </aside>
+
+      <!-- MAIN SCROLLABLE CONTENT AREA -->
+      <div class="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 custom-scrollbar bg-[#F8FAF8]">
+
+        <!-- ================= STUDENT VIEW: DASHBOARD ================= -->
+        <div id="view-student-dashboard" class="space-y-6 max-w-6xl mx-auto text-left">
+          
+          <!-- Hero Banner with Adaptive CTA based on Discovery completion -->
+          <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-800 via-emerald-700 to-teal-800 text-white p-6 sm:p-8 shadow-lg">
+            <div class="relative z-10 max-w-2xl space-y-3">
+              <span class="px-3 py-1 rounded-full bg-white/20 text-emerald-100 text-xs font-semibold backdrop-blur-sm">
+                नमस्ते प्रिया! (Welcome back)
+              </span>
+              <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
+                आपका भविष्य, आपका मार्ग।
+              </h2>
+              <p class="text-xs sm:text-sm text-emerald-100 leading-relaxed">
+                अपने कौशल और प्राथमिकताओं के आधार पर अपने लिए सबसे उपयुक्त करियर चुनें या वर्तमान सीखने की योजना पर आगे बढ़ें।
+              </p>
+
+              <div class="flex flex-wrap items-center gap-3 pt-2">
+                <button onclick="navigateTo('explore_careers')" class="px-5 py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-amber-950 font-black text-xs shadow-md transition flex items-center gap-2 group">
+                  <i data-lucide="compass" class="w-4 h-4"></i>
+                  <span data-i18n="ctaChooseCareer">अपना करियर मार्ग चुनें (Choose Career Path)</span>
+                  <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                </button>
+                <button onclick="navigateTo('roadmap')" class="px-4 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs border border-white/20 backdrop-blur-sm transition flex items-center gap-2">
+                  <i data-lucide="map" class="w-4 h-4"></i>
+                  <span data-i18n="viewActiveRoadmap">वर्तमान रोडमैप देखें</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Background decorative leaf graphic -->
+            <div class="absolute right-0 bottom-0 opacity-15 translate-x-10 translate-y-10 pointer-events-none">
+              <svg class="w-72 h-72 text-white" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 22v-9" />
+                <path d="M12 13a5 5 0 0 0-5-5H3a9 9 0 0 0 9 9Z" />
+                <path d="M12 13a5 5 0 0 1 5-5h4a9 9 0 0 1-9 9Z" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Quick Actions Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div onclick="navigateTo('my_learning')" class="p-4 rounded-2xl bg-white border border-slate-200 hover:border-emerald-600 cursor-pointer shadow-sm hover:shadow-md transition">
+              <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center mb-2">
+                <i data-lucide="book-open" class="w-5 h-5"></i>
+              </div>
+              <h4 class="font-bold text-xs text-slate-800">मेरी सीखने की योजना</h4>
+              <p class="text-[10px] text-slate-500 mt-0.5">3 सक्रिय पाठ व माइलस्टोन</p>
+            </div>
+
+            <div onclick="navigateTo('courses')" class="p-4 rounded-2xl bg-white border border-slate-200 hover:border-emerald-600 cursor-pointer shadow-sm hover:shadow-md transition">
+              <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center mb-2">
+                <i data-lucide="map-pin" class="w-5 h-5"></i>
+              </div>
+              <h4 class="font-bold text-xs text-slate-800">आस-पास के आईटीआई व कोर्स</h4>
+              <p class="text-[10px] text-slate-500 mt-0.5">अयोध्या व लखनऊ में 14 केंद्र</p>
+            </div>
+
+            <div onclick="navigateTo('scholarships')" class="p-4 rounded-2xl bg-white border border-slate-200 hover:border-emerald-600 cursor-pointer shadow-sm hover:shadow-md transition">
+              <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center mb-2">
+                <i data-lucide="award" class="w-5 h-5"></i>
+              </div>
+              <h4 class="font-bold text-xs text-slate-800">छात्रवृत्तियां और परीक्षाएं</h4>
+              <p class="text-[10px] text-slate-500 mt-0.5">₹25,000 तक की सहायता</p>
+            </div>
+
+            <div onclick="navigateTo('mentors')" class="p-4 rounded-2xl bg-white border border-slate-200 hover:border-emerald-600 cursor-pointer shadow-sm hover:shadow-md transition">
+              <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-800 flex items-center justify-center mb-2">
+                <i data-lucide="users" class="w-5 h-5"></i>
+              </div>
+              <h4 class="font-bold text-xs text-slate-800">करियर मेंटर से बात करें</h4>
+              <p class="text-[10px] text-slate-500 mt-0.5">मुफ़्त 1-on-1 मार्गदर्शन</p>
+            </div>
+          </div>
+
+          <!-- Featured Career Match Spotlight & Learning Progress in 2 Columns -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Left: Recommended Career Snapshot -->
+            <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="p-1.5 bg-emerald-100 rounded-lg text-emerald-800"><i data-lucide="target" class="w-4 h-4"></i></span>
+                  <h3 class="font-bold text-sm text-slate-800">सर्वोत्तम अनुशंसित करियर मैच</h3>
+                </div>
+                <span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                  96% मैच स्कोर
+                </span>
+              </div>
+
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-900 flex items-center justify-center text-2xl shrink-0">
+                    ☀️
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-sm text-slate-900">सोलर पीवी इंस्टॉलेशन तकनीशियन (Solar PV)</h4>
+                    <p class="text-xs text-slate-500">नवीकरणीय ऊर्जा • सरकारी PM सूर्य घर योजना समर्थित</p>
+                    <div class="flex items-center gap-2 mt-1.5 text-[10px]">
+                      <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-semibold">नि:शुल्क सरकारी प्रशिक्षण</span>
+                      <span class="px-2 py-0.5 rounded bg-slate-200 text-slate-700">3-6 माह अवधि</span>
+                    </div>
+                  </div>
+                </div>
+
+                <button onclick="navigateTo('roadmap')" class="px-4 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs shrink-0 shadow-sm transition">
+                  रोडमैप देखें
+                </button>
+              </div>
+
+              <!-- Why this matched -->
+              <div class="text-xs text-slate-600 bg-emerald-50/50 p-3 rounded-xl border border-emerald-100 space-y-1">
+                <p class="font-semibold text-emerald-900">यह करियर आपके लिए क्यों सही है?</p>
+                <p>• आपने प्रैक्टिकल काम और फील्ड वर्क में रुचि दिखाई है।</p>
+                <p>• आपके जिले (अयोध्या) में राजकीय आईटीआई में निःशुल्क सीट उपलब्ध है।</p>
+              </div>
+            </div>
+
+            <!-- Right: Active Milestone Progress -->
+            <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+              <div class="flex items-center justify-between">
+                <h3 class="font-bold text-sm text-slate-800">सीखने की प्रगति (Progress)</h3>
+                <span class="text-xs text-slate-500 font-semibold">2 / 5 पूर्ण</span>
+              </div>
+
+              <div class="space-y-3 text-xs">
+                <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                  <div class="flex items-center gap-2.5">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+                    <span class="text-slate-700 font-medium line-through">बेसिक इलेक्ट्रिकल सुरक्षा नियम</span>
+                  </div>
+                  <span class="text-[10px] text-emerald-700 font-bold">+50 XP</span>
+                </div>
+
+                <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                  <div class="flex items-center gap-2.5">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+                    <span class="text-slate-700 font-medium line-through">सोलर सेल व इन्वर्टर कार्यप्रणाली</span>
+                  </div>
+                  <span class="text-[10px] text-emerald-700 font-bold">+50 XP</span>
+                </div>
+
+                <div class="flex items-center justify-between p-2.5 rounded-xl bg-emerald-50 border border-emerald-200">
+                  <div class="flex items-center gap-2.5">
+                    <span class="w-4 h-4 rounded-full border-2 border-emerald-700 shrink-0"></span>
+                    <span class="text-slate-900 font-bold">सोलर पैनल इंस्टॉलेशन व्यावहारिक वर्कशॉप</span>
+                  </div>
+                  <span class="text-[10px] bg-emerald-700 text-white px-2 py-0.5 rounded font-bold">जारी है</span>
+                </div>
+              </div>
+
+              <button onclick="navigateTo('my_learning')" class="w-full py-2 rounded-xl text-center text-xs font-bold text-emerald-800 hover:bg-emerald-50 transition border border-emerald-200">
+                सम्पूर्ण लर्निंग पाथ खोलें →
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Bottom: Nearby Verified Opportunities & Apprenticeships -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="font-bold text-sm text-slate-800">नज़दीकी अवसर व अप्रेंटिसशिप (Nearby Opportunities)</h3>
+                <p class="text-[11px] text-slate-500">सरकारी पोर्टल व प्रमाणित कंपनियों द्वारा सत्यापित</p>
+              </div>
+              <button onclick="navigateTo('opportunities')" class="text-xs font-bold text-emerald-800 hover:text-emerald-900">
+                सभी अवसर (6) देखें →
+              </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div class="p-3.5 rounded-xl border border-slate-200 hover:border-emerald-500 transition text-xs space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] bg-blue-100 text-blue-800 font-bold px-1.5 py-0.5 rounded">अप्रेंटिसशिप</span>
+                  <span class="text-[10px] text-slate-400">10 दिन शेष</span>
+                </div>
+                <h4 class="font-bold text-slate-900">सोलर रूफटॉप ट्रेनी अप्रेंटिस</h4>
+                <p class="text-slate-500 text-[11px]">कुसुम ऊर्जा प्रा. लि. • अयोध्या व फैजाबाद</p>
+                <div class="pt-1 flex items-center justify-between text-[11px]">
+                  <span class="font-semibold text-emerald-700">₹8,500 / माह स्टाइपेंड</span>
+                  <button onclick="applySampleOpportunity('सोलर रूफटॉप ट्रेनी अप्रेंटिस')" class="px-2.5 py-1 bg-emerald-800 text-white rounded font-bold hover:bg-emerald-900">आवेदन</button>
+                </div>
+              </div>
+
+              <div class="p-3.5 rounded-xl border border-slate-200 hover:border-emerald-500 transition text-xs space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] bg-amber-100 text-amber-800 font-bold px-1.5 py-0.5 rounded">इंटर्नशिप</span>
+                  <span class="text-[10px] text-slate-400">सत्यापित</span>
+                </div>
+                <h4 class="font-bold text-slate-900">डिजिटल सेवा केंद्र (CSC) सहायक</h4>
+                <p class="text-slate-500 text-[11px]">ग्राम पंचायत ई-सुविधा • पूरा ब्लॉक</p>
+                <div class="pt-1 flex items-center justify-between text-[11px]">
+                  <span class="font-semibold text-emerald-700">₹6,000 / माह</span>
+                  <button onclick="applySampleOpportunity('CSC सहायक')" class="px-2.5 py-1 bg-emerald-800 text-white rounded font-bold hover:bg-emerald-900">आवेदन</button>
+                </div>
+              </div>
+
+              <div class="p-3.5 rounded-xl border border-slate-200 hover:border-emerald-500 transition text-xs space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded">छात्रवृत्ति</span>
+                  <span class="text-[10px] text-slate-400">सरकारी</span>
+                </div>
+                <h4 class="font-bold text-slate-900">राष्ट्रीय योग्यता सह मेधा छात्रवृत्ति (NMMSS)</h4>
+                <p class="text-slate-500 text-[11px]">मानव संसाधन विकास मंत्रालय (शिक्षा विभाग)</p>
+                <div class="pt-1 flex items-center justify-between text-[11px]">
+                  <span class="font-semibold text-emerald-700">₹12,000 / वर्ष</span>
+                  <button onclick="navigateTo('scholarships')" class="px-2.5 py-1 bg-slate-100 text-slate-700 rounded font-bold hover:bg-slate-200">विवरण</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ================= STUDENT VIEW: CAREER DISCOVERY (EXPLORE CAREERS) ================= -->
+        <!-- Matches WhatsApp Image 2026-10-18 at 12.23.40 PM.jpg -->
+        <div id="view-explore-careers" class="hidden space-y-6 max-w-6xl mx-auto text-left">
+          
+          <!-- Breadcrumb & Header -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <p class="text-xs text-slate-500">Home &gt; <span class="text-slate-800 font-semibold" data-i18n="navCareerPath">Explore Careers</span></p>
+              <h2 class="text-2xl font-black text-slate-900 mt-1" data-i18n="exploreTitle">करियर की खोज (Explore Careers)</h2>
+              <p class="text-xs text-slate-600 mt-0.5">अपनी रुचियों, ताकत और प्राथमिकताओं को साझा करें ताकि हम आपके लिए यथार्थवादी और व्यावहारिक विकल्प सुझा सकें।</p>
+            </div>
+
+            <!-- Text / Voice Mode Toggle for Discovery -->
+            <div class="flex items-center gap-2 bg-white p-1 rounded-xl border border-slate-200 shadow-sm">
+              <button onclick="setDiscoveryInputMode('text')" id="disc-btn-text" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-800 text-white text-xs font-semibold">
+                <i data-lucide="keyboard" class="w-3.5 h-3.5"></i> <span>Text Mode</span>
+              </button>
+              <button onclick="setDiscoveryInputMode('voice')" id="disc-btn-voice" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 text-xs font-semibold">
+                <i data-lucide="mic" class="w-3.5 h-3.5"></i> <span>Voice Mode</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Stepper Indicator (Interests -> Strengths -> Preferences -> Recommendations) -->
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <div class="grid grid-cols-4 gap-2 text-center text-xs">
+              <div class="flex items-center justify-center gap-2 pb-2 border-b-2 border-emerald-600 font-bold text-emerald-800">
+                <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
+                <span class="hidden sm:inline">1. रुचियाँ (Interests)</span>
+                <span class="sm:hidden">1. रुचियाँ</span>
+              </div>
+              <div class="flex items-center justify-center gap-2 pb-2 border-b-2 border-emerald-600 font-bold text-emerald-800">
+                <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
+                <span class="hidden sm:inline">2. ताकत (Strengths)</span>
+                <span class="sm:hidden">2. ताकत</span>
+              </div>
+              <div class="flex items-center justify-center gap-2 pb-2 border-b-2 border-emerald-600 font-bold text-emerald-800">
+                <span class="w-4 h-4 rounded-full bg-emerald-800 text-white text-[10px] flex items-center justify-center">3</span>
+                <span class="hidden sm:inline">3. प्राथमिकताएँ (Preferences)</span>
+                <span class="sm:hidden">3. प्राथमिकता</span>
+              </div>
+              <div class="flex items-center justify-center gap-2 pb-2 border-b-2 border-slate-200 text-slate-400">
+                <span class="w-4 h-4 rounded-full bg-slate-200 text-slate-600 text-[10px] flex items-center justify-center">4</span>
+                <span class="hidden sm:inline">4. परिणाम (Matches)</span>
+                <span class="sm:hidden">4. परिणाम</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive Voice Panel (If Voice Mode Enabled) -->
+          <div id="voice-assistant-bar" class="hidden p-4 rounded-2xl bg-gradient-to-r from-blue-900 to-indigo-900 text-white shadow-md flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center pulse-ring">
+                <i data-lucide="mic" class="w-5 h-5 text-white"></i>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-blue-200">अक्स वॉइस असिस्टेंट (Aks Voice Assistant)</p>
+                <p class="text-xs text-white" id="voice-prompt-text">"प्रिया, आप किस तरह के माहौल में काम करना सबसे ज्यादा पसंद करेंगी?"</p>
+              </div>
+            </div>
+            <button onclick="simulateVoiceSpeak()" class="px-3 py-1.5 rounded-lg bg-white/20 hover:bg-white/30 text-white text-xs font-semibold flex items-center gap-1.5">
+              <i data-lucide="volume-2" class="w-4 h-4"></i>
+              <span>सुनें (Listen)</span>
+            </button>
+          </div>
+
+          <!-- Questionnaire Grid (Matches WhatsApp Reference Layout) -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- Left Questions Form (8 Cols) -->
+            <div class="lg:col-span-8 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6">
+              
+              <!-- Question 1: Work Environment Preference -->
+              <div class="space-y-3">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="briefcase" class="w-4 h-4 text-emerald-700"></i>
+                  <h3 class="text-xs sm:text-sm font-bold text-slate-900">1. आप किस तरह के कार्य वातावरण को प्राथमिकता देते हैं? (Work Environment)</h3>
+                </div>
+                <p class="text-[11px] text-slate-500">उन सभी विकल्पों को चुनें जो आपको अच्छे लगते हैं:</p>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+                  <label class="p-3 rounded-xl border-2 border-emerald-600 bg-emerald-50/50 flex flex-col items-center text-center cursor-pointer hover:bg-emerald-50 transition">
+                    <input type="checkbox" name="work_env" value="tech" checked class="sr-only">
+                    <span class="text-xl mb-1">💻</span>
+                    <span class="font-bold text-slate-800">कंप्यूटर / तकनीक</span>
+                    <span class="text-[10px] text-slate-500">डिजिटल उपकरण</span>
+                  </label>
+
+                  <label class="p-3 rounded-xl border border-slate-200 bg-white flex flex-col items-center text-center cursor-pointer hover:border-emerald-600 transition">
+                    <input type="checkbox" name="work_env" value="outdoors" class="sr-only">
+                    <span class="text-xl mb-1">🌱</span>
+                    <span class="font-semibold text-slate-800">खुला मैदान (फील्ड)</span>
+                    <span class="text-[10px] text-slate-500">कृषि, प्रकृति</span>
+                  </label>
+
+                  <label class="p-3 rounded-xl border border-slate-200 bg-white flex flex-col items-center text-center cursor-pointer hover:border-emerald-600 transition">
+                    <input type="checkbox" name="work_env" value="people" class="sr-only">
+                    <span class="text-xl mb-1">👥</span>
+                    <span class="font-semibold text-slate-800">लोगों के साथ</span>
+                    <span class="text-[10px] text-slate-500">सिखाना, स्वास्थ्य</span>
+                  </label>
+
+                  <label class="p-3 rounded-xl border-2 border-emerald-600 bg-emerald-50/50 flex flex-col items-center text-center cursor-pointer hover:bg-emerald-50 transition">
+                    <input type="checkbox" name="work_env" value="hands_on" checked class="sr-only">
+                    <span class="text-xl mb-1">🔧</span>
+                    <span class="font-bold text-slate-800">व्यावहारिक / हाथ का काम</span>
+                    <span class="text-[10px] text-slate-500">रिपेयरिंग, इंस्टॉलेशन</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Question 2: Education Plan -->
+              <div class="space-y-3 pt-4 border-t border-slate-100">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="graduation-cap" class="w-4 h-4 text-emerald-700"></i>
+                  <h3 class="text-xs sm:text-sm font-bold text-slate-900">2. आपकी आगे की पढ़ाई की क्या योजना है? (Education Plan)</h3>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+                  <label class="p-3 rounded-xl border border-slate-200 flex items-center gap-3 cursor-pointer hover:border-emerald-600">
+                    <input type="radio" name="edu_plan" value="earn_soon" class="text-emerald-700">
+                    <div>
+                      <p class="font-bold text-slate-800">कक्षा 12 के बाद काम शुरू</p>
+                      <p class="text-[10px] text-slate-500">जल्दी कमाई जरूरी है</p>
+                    </div>
+                  </label>
+                  <label class="p-3 rounded-xl border-2 border-emerald-600 bg-emerald-50/40 flex items-center gap-3 cursor-pointer">
+                    <input type="radio" name="edu_plan" value="diploma" checked class="text-emerald-700">
+                    <div>
+                      <p class="font-bold text-slate-800">डिप्लोमा / आईटीआई (ITI)</p>
+                      <p class="text-[10px] text-slate-500">1-2 वर्ष में हुनर सीखें</p>
+                    </div>
+                  </label>
+                  <label class="p-3 rounded-xl border border-slate-200 flex items-center gap-3 cursor-pointer hover:border-emerald-600">
+                    <input type="radio" name="edu_plan" value="degree" class="text-emerald-700">
+                    <div>
+                      <p class="font-bold text-slate-800">3-4 वर्षीय कॉलेज डिग्री</p>
+                      <p class="text-[10px] text-slate-500">स्नातक / उच्च शिक्षा</p>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Question 3: Scenario Prompt (From Blueprint Section 7, Step 3) -->
+              <div class="space-y-3 pt-4 border-t border-slate-100 bg-amber-50/50 p-4 rounded-xl border border-amber-200/60">
+                <div class="flex items-center gap-2">
+                  <span class="text-base">💡</span>
+                  <h3 class="text-xs sm:text-sm font-bold text-slate-900">गाँव की स्थिति का परिदृश्य (Real Scenario Question)</h3>
+                </div>
+                <p class="text-xs text-slate-700 leading-relaxed">
+                  "मान लीजिए आपके गाँव में सौर ऊर्जा संयंत्र (Solar Plant) लगाया जा रहा है। आप इस काम में सबसे ज्यादा कौन-सी भूमिका निभाना पसंद करेंगे?"
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                  <label class="p-2.5 rounded-lg bg-white border border-slate-200 flex items-center gap-2 cursor-pointer hover:border-emerald-600">
+                    <input type="radio" name="scenario_pick" value="solar_tech" checked class="text-emerald-700">
+                    <span>उपकरण जोड़ना और वायरिंग ठीक करना</span>
+                  </label>
+                  <label class="p-2.5 rounded-lg bg-white border border-slate-200 flex items-center gap-2 cursor-pointer hover:border-emerald-600">
+                    <input type="radio" name="scenario_pick" value="community" class="text-emerald-700">
+                    <span>गाँव वालों को सौर ऊर्जा के फायदे समझाना</span>
+                  </label>
+                  <label class="p-2.5 rounded-lg bg-white border border-slate-200 flex items-center gap-2 cursor-pointer hover:border-emerald-600">
+                    <input type="radio" name="scenario_pick" value="accounts" class="text-emerald-700">
+                    <span>बिजली बिल और कनेक्शन का हिसाब रखना</span>
+                  </label>
+                  <label class="p-2.5 rounded-lg bg-white border border-slate-200 flex items-center gap-2 cursor-pointer hover:border-emerald-600">
+                    <input type="radio" name="scenario_pick" value="manager" class="text-emerald-700">
+                    <span>पूरी टीम का प्रबंधन और सामान मंगवाना</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Question 4: Relocation & Location Willingness -->
+              <div class="space-y-3 pt-4 border-t border-slate-100">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="map-pin" class="w-4 h-4 text-emerald-700"></i>
+                  <h3 class="text-xs sm:text-sm font-bold text-slate-900">3. क्या आप प्रशिक्षण या काम के लिए यात्रा कर सकते हैं? (Relocation)</h3>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+                  <label class="p-2.5 rounded-xl border-2 border-emerald-600 bg-emerald-50/40 flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="reloc" value="state" checked class="text-emerald-700">
+                    <span>हाँ, जिले या राज्य के अंदर</span>
+                  </label>
+                  <label class="p-2.5 rounded-xl border border-slate-200 flex items-center gap-2 cursor-pointer hover:border-emerald-600">
+                    <input type="radio" name="reloc" value="village" class="text-emerald-700">
+                    <span>केवल गाँव या ब्लॉक के पास</span>
+                  </label>
+                  <label class="p-2.5 rounded-xl border border-slate-200 flex items-center gap-2 cursor-pointer hover:border-emerald-600">
+                    <input type="radio" name="reloc" value="anywhere" class="text-emerald-700">
+                    <span>पूरे भारत में कहीं भी</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Action Bar -->
+              <div class="flex items-center justify-between pt-6 border-t border-slate-100">
+                <button onclick="navigateTo('student_dashboard')" class="px-4 py-2.5 text-xs font-semibold rounded-xl border border-slate-300 hover:bg-slate-50">
+                  वापस (Back)
+                </button>
+                <button onclick="generateCareerMatches()" class="px-6 py-2.5 text-xs font-bold rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white shadow-md flex items-center gap-2">
+                  <span>मेरे लिए उपयुक्त करियर दिखाएँ (Show Matches)</span>
+                  <i data-lucide="sparkles" class="w-4 h-4"></i>
+                </button>
+              </div>
+
+            </div>
+
+            <!-- Right Sidebar Helper (Matches Reference Image Info Sidebar) -->
+            <div class="lg:col-span-4 space-y-4">
+              
+              <!-- Card 1: Why do we ask? -->
+              <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+                <div class="flex items-center gap-2">
+                  <span class="text-amber-500 font-bold">💡</span>
+                  <h4 class="font-bold text-xs text-slate-800">हम यह सवाल क्यों पूछते हैं?</h4>
+                </div>
+                <ul class="text-xs text-slate-600 space-y-2">
+                  <li class="flex items-start gap-2">
+                    <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-600 mt-0.5 shrink-0"></i>
+                    <span>ताकि आपकी दैनिक जीवनशैली और रुचियों के अनुकूल करियर मिले।</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-600 mt-0.5 shrink-0"></i>
+                    <span>ताकि आपके बजट और समय के भीतर सरकारी या कम खर्च वाले कोर्सेज दिखें।</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-600 mt-0.5 shrink-0"></i>
+                    <span>सिर्फ किताबी सुझाव नहीं, बल्कि स्थानीय धरातल पर संभव विकल्प।</span>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Card 2: Aks AI Quick Help -->
+              <div class="bg-emerald-50 rounded-2xl border border-emerald-200 p-5 shadow-sm space-y-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-lg">🤖</span>
+                  <h4 class="font-bold text-xs text-emerald-900">फैसला करने में मदद चाहिए?</h4>
+                </div>
+                <p class="text-xs text-emerald-800">हमारे सहायक अक्स (Aks AI) से बात करें और अपनी किसी भी दुविधा का समाधान पाएँ।</p>
+                <button onclick="openAksWithPrompt('मुझे समझने में मदद करें कि कौन-सा करियर विकल्प मेरे लिए श्रेष्ठ रहेगा?')" class="mt-2 w-full py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl text-xs font-bold transition shadow-sm">
+                  अक्स (Aks AI) से पूछें →
+                </button>
+              </div>
+
+              <!-- Card 3: Inspiring Rural Success Story -->
+              <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm text-xs space-y-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-blue-500">📖</span>
+                  <span class="font-bold text-slate-800">प्रेरक कहानी</span>
+                </div>
+                <p class="text-slate-600 italic">"मैंने कक्षा 12 के बाद सरकारी आईटीआई से सोलर तकनीशियन का कोर्स किया। आज मैं अपने ब्लॉक में 40+ सोलर पंप लगा चुका हूँ।"</p>
+                <p class="font-bold text-slate-800 text-[11px]">— रमेश मौर्य, बाराबंकी (उ.प्र.)</p>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- ================= STUDENT VIEW: CAREER MATCHES RESULTS (STEP 5) ================= -->
+        <div id="view-career-matches" class="hidden space-y-6 max-w-6xl mx-auto text-left">
+          
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full">एआई विश्लेषण पूर्ण (AI Matched)</span>
+              <h2 class="text-2xl font-black text-slate-900 mt-2">प्रिया, आपके लिए उपयुक्त करियर विकल्प</h2>
+              <p class="text-xs text-slate-600 mt-1">आपकी प्राथमिकताओं (प्रैक्टिकल काम, कम लागत, तकनीक व अयोध्या क्षेत्र) के आधार पर अनुशंसित:</p>
+            </div>
+            <button onclick="navigateTo('explore_careers')" class="px-3.5 py-2 text-xs font-semibold rounded-xl border border-slate-300 hover:bg-slate-50 shrink-0">
+              उत्तर संपादित करें (Edit Answers)
+            </button>
+          </div>
+
+          <!-- Matches Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            
+            <!-- Match 1: Solar PV Technician (Primary Recommended) -->
+            <div class="p-5 rounded-2xl bg-white border-2 border-emerald-600 shadow-md relative flex flex-col justify-between space-y-4">
+              <span class="absolute top-4 right-4 bg-emerald-100 text-emerald-800 font-extrabold text-[10px] px-2 py-0.5 rounded-full border border-emerald-300">
+                ⭐ 96% मैच
+              </span>
+              <div>
+                <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center text-2xl mb-3">
+                  ☀️
+                </div>
+                <h3 class="font-bold text-base text-slate-900">सोलर पीवी इंस्टॉलेशन तकनीशियन</h3>
+                <p class="text-xs text-slate-500 font-medium">कुशल तकनीकी कार्य • नवीकरणीय ऊर्जा</p>
+
+                <div class="mt-3 space-y-2 text-xs text-slate-600">
+                  <div class="p-2 rounded-lg bg-emerald-50 text-emerald-900 font-medium">
+                    🎯 <strong>क्यों उपयुक्त है:</strong> हाथ से काम करने की रुचि व सरकारी छात्रवृत्ति उपलब्ध।
+                  </div>
+                  <div class="grid grid-cols-2 gap-2 text-[11px] pt-1">
+                    <div>
+                      <span class="text-slate-400 block">प्रशिक्षण अवधि:</span>
+                      <span class="font-semibold text-slate-800">4 से 6 माह</span>
+                    </div>
+                    <div>
+                      <span class="text-slate-400 block">लागत (Cost):</span>
+                      <span class="font-semibold text-emerald-700">नि:शुल्क (सरकारी ITI)</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pt-2 border-t border-slate-100 flex items-center gap-2">
+                <button onclick="loadCareerRoadmap('solar')" class="flex-1 py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs text-center shadow transition">
+                  करियर पाथ बनाएँ (Roadmap)
+                </button>
+                <button onclick="toggleSaveCareer('solar', this)" title="Save for later" class="p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600">
+                  <i data-lucide="bookmark" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Match 2: Digital Services & CSC Entrepreneur -->
+            <div class="p-5 rounded-2xl bg-white border border-slate-200 hover:border-emerald-500 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-4">
+              <span class="text-right text-xs font-bold text-slate-500">91% मैच</span>
+              <div>
+                <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center text-2xl mb-3">
+                  💻
+                </div>
+                <h3 class="font-bold text-base text-slate-900">डिजिटल सेवा केंद्र (CSC) उद्यमी</h3>
+                <p class="text-xs text-slate-500 font-medium">प्रौद्योगिकी और ग्रामीण सेवाएं</p>
+
+                <div class="mt-3 space-y-2 text-xs text-slate-600">
+                  <div class="p-2 rounded-lg bg-slate-50 text-slate-700">
+                    🎯 <strong>क्यों उपयुक्त है:</strong> कंप्यूटर रुचि व गाँव में रहकर आत्म-निर्भर बनने का अवसर।
+                  </div>
+                  <div class="grid grid-cols-2 gap-2 text-[11px] pt-1">
+                    <div>
+                      <span class="text-slate-400 block">प्रशिक्षण अवधि:</span>
+                      <span class="font-semibold text-slate-800">3 माह सर्टिफिकेट</span>
+                    </div>
+                    <div>
+                      <span class="text-slate-400 block">प्रारंभिक आय:</span>
+                      <span class="font-semibold text-emerald-700">₹15,000 - ₹25,000/माह</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pt-2 border-t border-slate-100 flex items-center gap-2">
+                <button onclick="loadCareerRoadmap('csc')" class="flex-1 py-2.5 rounded-xl bg-slate-100 hover:bg-emerald-800 hover:text-white text-slate-800 font-bold text-xs text-center transition">
+                  करियर पाथ बनाएँ (Roadmap)
+                </button>
+                <button onclick="toggleSaveCareer('csc', this)" class="p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600">
+                  <i data-lucide="bookmark" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Match 3: Agri-Extension & Modern Irrigation Officer -->
+            <div class="p-5 rounded-2xl bg-white border border-slate-200 hover:border-emerald-500 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-4">
+              <span class="text-right text-xs font-bold text-slate-500">88% मैच</span>
+              <div>
+                <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-2xl mb-3">
+                  🌾
+                </div>
+                <h3 class="font-bold text-base text-slate-900">कृषि विस्तार एवं आधुनिक सिंचाई सहायक</h3>
+                <p class="text-xs text-slate-500 font-medium">कृषि व ग्रामीण विकास</p>
+
+                <div class="mt-3 space-y-2 text-xs text-slate-600">
+                  <div class="p-2 rounded-lg bg-slate-50 text-slate-700">
+                    🎯 <strong>क्यों उपयुक्त है:</strong> ड्रिप सिंचाई व जैविक खेती की बढ़ती स्थानीय मांग।
+                  </div>
+                  <div class="grid grid-cols-2 gap-2 text-[11px] pt-1">
+                    <div>
+                      <span class="text-slate-400 block">प्रशिक्षण अवधि:</span>
+                      <span class="font-semibold text-slate-800">6 माह डिप्लोमा</span>
+                    </div>
+                    <div>
+                      <span class="text-slate-400 block">रोजगार क्षेत्र:</span>
+                      <span class="font-semibold text-slate-800">FPO, बीज केंद्र, स्वयं उद्यम</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pt-2 border-t border-slate-100 flex items-center gap-2">
+                <button onclick="loadCareerRoadmap('agri')" class="flex-1 py-2.5 rounded-xl bg-slate-100 hover:bg-emerald-800 hover:text-white text-slate-800 font-bold text-xs text-center transition">
+                  करियर पाथ बनाएँ (Roadmap)
+                </button>
+                <button onclick="toggleSaveCareer('agri', this)" class="p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600">
+                  <i data-lucide="bookmark" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Trust & Authenticity Disclaimer (From Blueprint Section 7) -->
+          <div class="p-4 rounded-xl bg-slate-100 text-slate-600 text-xs flex items-center gap-2">
+            <i data-lucide="shield-alert" class="w-4 h-4 text-slate-500 shrink-0"></i>
+            <span><strong>पारदर्शिता नियम:</strong> प्रोजेक्ट उड़ान किसी भी नौकरी या वेतन का झूठा वादा नहीं करता है। ये सिफारिशें सरकारी कौशल विकास मिशन (PMKVY / NCVT) के आधिकारिक मानकों पर आधारित हैं।</span>
+          </div>
+
+        </div>
+
+        <!-- ================= STUDENT VIEW: PERSONALIZED ROADMAP (STEP 6) ================= -->
+        <div id="view-roadmap" class="hidden space-y-6 max-w-5xl mx-auto text-left">
+          
+          <!-- Roadmap Header Banner -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+              <div class="w-14 h-14 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center text-3xl shadow-inner shrink-0">
+                ☀️
+              </div>
+              <div>
+                <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded">वैयक्तिकृत रोडमैप (Personalized)</span>
+                <h2 class="text-xl sm:text-2xl font-black text-slate-900 mt-1">सोलर पीवी तकनीशियन करियर पाथ</h2>
+                <p class="text-xs text-slate-500">स्थान: अयोध्या व नजदीकी राजकीय ITI • अनुमानित कुल अवधि: 6 माह</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 shrink-0">
+              <button onclick="saveRoadmapToast()" class="px-3.5 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs shadow flex items-center gap-1.5">
+                <i data-lucide="bookmark" class="w-4 h-4"></i>
+                <span data-i18n="saveRoadmap">रोडमैप सहेजें</span>
+              </button>
+              <button onclick="printRoadmap()" class="p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600">
+                <i data-lucide="printer" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Step-by-Step Milestones Timeline -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6">
+            <h3 class="font-bold text-sm text-slate-900 flex items-center gap-2">
+              <i data-lucide="list-ordered" class="w-4 h-4 text-emerald-700"></i>
+              <span>कदम-दर-कदम सीखने की चरणबद्ध योजना (5 Phases)</span>
+            </h3>
+
+            <div class="space-y-6 relative pl-6 border-l-2 border-emerald-600/30">
+              
+              <!-- Phase 1 -->
+              <div class="relative group">
+                <span class="absolute -left-[31px] top-0 w-6 h-6 rounded-full bg-emerald-700 text-white flex items-center justify-center text-xs font-bold ring-4 ring-white">✓</span>
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                  <div class="flex items-center justify-between">
+                    <h4 class="font-bold text-xs text-slate-900">चरण 1: बुनियादी सिद्धांत और सुरक्षा नियम (Foundations)</h4>
+                    <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded">पूर्ण (Completed)</span>
+                  </div>
+                  <p class="text-xs text-slate-600 mt-1">विद्युत के मूल नियम, सुरक्षा सावधानियां (PPE किट), औजारों का सही उपयोग व वोल्टेज मापन।</p>
+                  <div class="mt-2 text-[11px] text-slate-500">
+                    स्रोत: निमी (NIMI) ऑनलाइन मॉड्यूल • अवधि: 2 सप्ताह • शुल्क: नि:शुल्क
+                  </div>
+                </div>
+              </div>
+
+              <!-- Phase 2 -->
+              <div class="relative group">
+                <span class="absolute -left-[31px] top-0 w-6 h-6 rounded-full bg-emerald-700 text-white flex items-center justify-center text-xs font-bold ring-4 ring-white">✓</span>
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                  <div class="flex items-center justify-between">
+                    <h4 class="font-bold text-xs text-slate-900">चरण 2: मान्यता प्राप्त वोकेशनल कोर्स में नामांकन (ITI Admission)</h4>
+                    <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded">पूर्ण (Completed)</span>
+                  </div>
+                  <p class="text-xs text-slate-600 mt-1">राजकीय औद्योगिक प्रशिक्षण संस्थान (ITI Ayodhya) में "सूर्य मित्र" (Surya Mitra) कार्यक्रम में प्रवेश।</p>
+                  <div class="mt-2 text-[11px] text-emerald-800 font-medium">
+                    सत्यापित संस्थान: राजकीय ITI, बेनीगंज अयोध्या • मान्यता: NCVT
+                  </div>
+                </div>
+              </div>
+
+              <!-- Phase 3 (Active) -->
+              <div class="relative group">
+                <span class="absolute -left-[31px] top-0 w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center text-xs font-bold ring-4 ring-white pulse-ring">3</span>
+                <div class="bg-amber-50/50 p-4 rounded-xl border-2 border-amber-300">
+                  <div class="flex items-center justify-between">
+                    <h4 class="font-bold text-xs text-slate-900">चरण 3: व्यावहारिक इंस्टॉलेशन वर्कशॉप (Hands-on Practice)</h4>
+                    <span class="text-[10px] bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded">जारी है (In Progress)</span>
+                  </div>
+                  <p class="text-xs text-slate-600 mt-1">छत पर सोलर पैनल का स्ट्रक्चर तैयार करना, वायरिंग, इनवर्टर कनेक्शन और अर्थिंग प्रक्रिया।</p>
+                  
+                  <div class="mt-3 flex items-center gap-3">
+                    <button onclick="completeCurrentMilestone()" class="px-3.5 py-1.5 bg-emerald-800 text-white rounded-lg text-xs font-bold hover:bg-emerald-900 flex items-center gap-1.5 shadow-sm">
+                      <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                      <span>पूर्ण के रूप में चिह्नित करें (+100 XP)</span>
+                    </button>
+                    <button onclick="navigateTo('courses')" class="px-3 py-1.5 bg-white border border-slate-300 text-slate-700 rounded-lg text-xs font-medium hover:bg-slate-50">
+                      प्रैक्टिकल सुविधा प्रदाता खोजें
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Phase 4 -->
+              <div class="relative group">
+                <span class="absolute -left-[31px] top-0 w-6 h-6 rounded-full bg-slate-300 text-slate-600 flex items-center justify-center text-xs font-bold ring-4 ring-white">4</span>
+                <div class="bg-white p-4 rounded-xl border border-slate-200">
+                  <div class="flex items-center justify-between">
+                    <h4 class="font-bold text-xs text-slate-800">चरण 4: राष्ट्रीय कौशल प्रमाणन परीक्षा (Skill Certification)</h4>
+                    <span class="text-[10px] bg-slate-100 text-slate-600 font-bold px-2 py-0.5 rounded">आगामी</span>
+                  </div>
+                  <p class="text-xs text-slate-500 mt-1">स्किल काउंसिल फॉर ग्रीन जॉब्स (SCGJ) द्वारा आयोजित ऑनलाइन व प्रैक्टिकल टेस्ट पास करें।</p>
+                </div>
+              </div>
+
+              <!-- Phase 5 -->
+              <div class="relative group">
+                <span class="absolute -left-[31px] top-0 w-6 h-6 rounded-full bg-slate-300 text-slate-600 flex items-center justify-center text-xs font-bold ring-4 ring-white">5</span>
+                <div class="bg-white p-4 rounded-xl border border-slate-200">
+                  <div class="flex items-center justify-between">
+                    <h4 class="font-bold text-xs text-slate-800">चरण 5: अप्रेंटिसशिप व उद्यम अवसर (Career Transition)</h4>
+                    <span class="text-[10px] bg-slate-100 text-slate-600 font-bold px-2 py-0.5 rounded">अंतिम चरण</span>
+                  </div>
+                  <p class="text-xs text-slate-500 mt-1">सरकारी व निजी सोलर कंपनियों में 6 माह की सवैतनिक अप्रेंटिसशिप या स्वयं की रूफटॉप सर्विस शुरू करें।</p>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Alternative Routes (From Blueprint Section 7) -->
+          <div class="p-4 rounded-xl bg-blue-50 border border-blue-200 text-xs text-blue-900 space-y-2">
+            <h4 class="font-bold">वैकल्पिक मार्ग (Alternative Pathways):</h4>
+            <p>यदि आप नियमित आईटीआई कॉलेज जाने में असमर्थ हैं, तो आप एनआईओएस (NIOS) के ओपन वोकेशनल कोर्स के साथ ऑनलाइन थ्योरी पूरी कर सकते हैं और केवल 15 दिन के प्रैक्टिकल बूटकैंप में भाग ले सकते हैं।</p>
+          </div>
+
+        </div>
+
+        <!-- ================= STUDENT VIEW: COURSES & FACILITATORS ================= -->
+        <div id="view-courses" class="hidden space-y-6 max-w-6xl mx-auto text-left">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h2 class="text-2xl font-black text-slate-900" data-i18n="navCourses">पाठ्यक्रम और मार्गदर्शक (Courses & Facilitators)</h2>
+              <p class="text-xs text-slate-600 mt-0.5">आपके क्षेत्र (अयोध्या व उत्तर प्रदेश) के सत्यापित सरकारी आईटीआई, गैर-सरकारी केंद्र व शिक्षक</p>
+            </div>
+            
+            <!-- Quick stats indicator -->
+            <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full">
+              6 सत्यापित स्थानीय केंद्र उपलब्ध
+            </span>
+          </div>
+
+          <!-- Location & Filter Bar (From Blueprint Section 8) -->
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">स्थान का दायरा (Distance):</label>
+              <select id="course-filter-loc" onchange="filterCourses()" class="w-full p-2 rounded-lg border border-slate-300 focus:outline-none">
+                <option value="all">सभी स्थान (All Locations)</option>
+                <option value="district" selected>मेरे जिले के अंदर (Within District - Ayodhya)</option>
+                <option value="state">पूरे उत्तर प्रदेश में (State)</option>
+                <option value="online">केवल ऑनलाइन (Online)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">प्रदाता का प्रकार (Provider):</label>
+              <select id="course-filter-type" onchange="filterCourses()" class="w-full p-2 rounded-lg border border-slate-300 focus:outline-none">
+                <option value="all">सभी प्रदाता (All)</option>
+                <option value="govt" selected>राजकीय ITI / सरकारी (Govt Only)</option>
+                <option value="ngo">एनजीओ / कम्युनिटी केंद्र</option>
+                <option value="facilitator">सत्यापित शिक्षक (Facilitators)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">शुल्क (Fee):</label>
+              <select id="course-filter-fee" onchange="filterCourses()" class="w-full p-2 rounded-lg border border-slate-300 focus:outline-none">
+                <option value="all">सभी (All)</option>
+                <option value="free" selected>केवल नि:शुल्क (Free / Sponsored)</option>
+                <option value="low">कम शुल्क (&lt; ₹1000)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">कौशल श्रेणी (Skill Domain):</label>
+              <select id="course-filter-domain" onchange="filterCourses()" class="w-full p-2 rounded-lg border border-slate-300 focus:outline-none">
+                <option value="all">सभी श्रेणियां</option>
+                <option value="solar" selected>सोलर व इलेक्ट्रिकल</option>
+                <option value="digital">कंप्यूटर व डिजिटल</option>
+                <option value="agri">कृषि व बागवानी</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Courses Grid -->
+          <div id="courses-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            
+            <!-- Course 1 -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-4">
+              <div>
+                <div class="flex items-center justify-between text-[11px] mb-2">
+                  <span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded">राजकीय ITI (Govt)</span>
+                  <span class="text-slate-400">दूरी: 6 किमी</span>
+                </div>
+                <h4 class="font-bold text-sm text-slate-900">सूर्य मित्र (Surya Mitra) सोलर तकनीशियन</h4>
+                <p class="text-xs text-slate-500 mt-0.5 font-medium">राजकीय औद्योगिक प्रशिक्षण संस्थान (ITI), अयोध्या</p>
+                
+                <div class="mt-3 space-y-1.5 text-xs text-slate-600">
+                  <p>• <strong>पात्रता:</strong> 10वीं/12वीं पास या आईटीआई</p>
+                  <p>• <strong>अवधि:</strong> 3 माह (प्रैक्टिकल वर्कशॉप सहित)</p>
+                  <p>• <strong>शुल्क:</strong> <span class="font-bold text-emerald-700">पूर्णतः नि:शुल्क (सरकारी योजना)</span></p>
+                </div>
+              </div>
+
+              <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                <span class="text-[10px] text-slate-400">सत्यापित: 15 दिन पूर्व</span>
+                <button onclick="openEnrollModal('सूर्य मित्र - राजकीय ITI अयोध्या')" class="px-3.5 py-1.5 bg-emerald-800 text-white rounded-lg text-xs font-bold hover:bg-emerald-900 shadow-sm">
+                  नामांकन हेतु संपर्क (Connect)
+                </button>
+              </div>
+            </div>
+
+            <!-- Course 2 -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-4">
+              <div>
+                <div class="flex items-center justify-between text-[11px] mb-2">
+                  <span class="bg-blue-100 text-blue-800 font-bold px-2 py-0.5 rounded">सुविधा प्रदाता (Facilitator)</span>
+                  <span class="text-slate-400">ऑनलाइन + वीकेंड</span>
+                </div>
+                <h4 class="font-bold text-sm text-slate-900">बेसिक इलेक्ट्रिकल व वायरिंग वर्कशॉप</h4>
+                <p class="text-xs text-slate-500 mt-0.5 font-medium">शिक्षक: रमेश शर्मा (10 वर्ष का अनुभव)</p>
+                
+                <div class="mt-3 space-y-1.5 text-xs text-slate-600">
+                  <p>• <strong>भाषा:</strong> सरल हिन्दी व स्थानीय बोली</p>
+                  <p>• <strong>अवधि:</strong> 4 सप्ताह (सप्ताहांत कक्षाएं)</p>
+                  <p>• <strong>शुल्क:</strong> नि:शुल्क सामुदायिक सत्र</p>
+                </div>
+              </div>
+
+              <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                <span class="text-[10px] text-slate-400">सत्यापित शिक्षक</span>
+                <button onclick="openEnrollModal('रमेश शर्मा - वायरिंग वर्कशॉप')" class="px-3.5 py-1.5 bg-emerald-800 text-white rounded-lg text-xs font-bold hover:bg-emerald-900 shadow-sm">
+                  सत्र का अनुरोध करें
+                </button>
+              </div>
+            </div>
+
+            <!-- Course 3 -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-4">
+              <div>
+                <div class="flex items-center justify-between text-[11px] mb-2">
+                  <span class="bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded">डिजिटल कौशल</span>
+                  <span class="text-slate-400">ब्लॉक केंद्र</span>
+                </div>
+                <h4 class="font-bold text-sm text-slate-900">कंप्यूटर ऑपरेटर एवं सीएससी प्रबंधन</h4>
+                <p class="text-xs text-slate-500 mt-0.5 font-medium">प्रधानमंत्री ग्रामीण डिजिटल साक्षरता दिशा (PMGDISHA)</p>
+                
+                <div class="mt-3 space-y-1.5 text-xs text-slate-600">
+                  <p>• <strong>कौशल:</strong> टाइपिंग, सरकारी पोर्टल, बिल भुगतान</p>
+                  <p>• <strong>अवधि:</strong> 30 घंटे</p>
+                  <p>• <strong>शुल्क:</strong> नि:शुल्क (सरकारी प्रमाण पत्र)</p>
+                </div>
+              </div>
+
+              <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                <span class="text-[10px] text-slate-400">सत्यापित केंद्र</span>
+                <button onclick="openEnrollModal('PMGDISHA - ब्लॉक केंद्र')" class="px-3.5 py-1.5 bg-emerald-800 text-white rounded-lg text-xs font-bold hover:bg-emerald-900 shadow-sm">
+                  आवेदन करें
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- ================= STUDENT VIEW: SCHOLARSHIPS & EXAMS ================= -->
+        <div id="view-scholarships" class="hidden space-y-6 max-w-6xl mx-auto text-left">
+          
+          <div>
+            <h2 class="text-2xl font-black text-slate-900" data-i18n="navScholarships">छात्रवृत्तियाँ और प्रतियोगी परीक्षाएँ (Scholarships & Exams)</h2>
+            <p class="text-xs text-slate-600 mt-0.5">ग्रामीण व कम आय वर्ग के विद्यार्थियों के लिए केंद्र व राज्य सरकार की योजनाएँ</p>
+          </div>
+
+          <!-- Eligibility Checker Card -->
+          <div class="p-4 rounded-2xl bg-gradient-to-r from-emerald-800 to-emerald-950 text-white shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="space-y-1">
+              <span class="text-[10px] bg-amber-400 text-amber-950 font-bold px-2 py-0.5 rounded">पात्रता स्थिति: उच्च (High Eligibility)</span>
+              <h3 class="text-base font-bold">प्रिया, आपकी प्रोफाइल 3 प्रमुख सरकारी छात्रवृत्तियों के योग्य है!</h3>
+              <p class="text-xs text-emerald-200">आधार कार्ड, आय प्रमाण-पत्र (&lt; ₹2.5 लाख) और 10वीं की अंकतालिका तैयार रखें।</p>
+            </div>
+            <button onclick="showDocChecklist()" class="px-4 py-2 bg-white text-emerald-900 font-bold text-xs rounded-xl hover:bg-emerald-50 shrink-0">
+              जरूरी दस्तावेज चेकलिस्ट देखें
+            </button>
+          </div>
+
+          <!-- Schemes Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            
+            <!-- Scheme 1 -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded">संभावित रूप से पात्र (Potentially Eligible)</span>
+                <span class="text-xs text-rose-600 font-bold">5 दिन शेष!</span>
+              </div>
+              <h4 class="font-bold text-sm text-slate-900">राष्ट्रीय साधन-सह-योग्यता छात्रवृत्ति योजना (NMMSS)</h4>
+              <p class="text-xs text-slate-600">कक्षा 12 और माध्यमिक स्तर के मेधावी ग्रामीण छात्रों के लिए सालाना वित्तीय सहायता।</p>
+              
+              <div class="bg-slate-50 p-3 rounded-xl space-y-1 text-xs text-slate-700">
+                <p>• <strong>छात्रवृत्ति राशि:</strong> ₹12,000 प्रति वर्ष (सीधे बैंक खाते में DBT)</p>
+                <p>• <strong>पात्रता मानदंड:</strong> 10वीं में न्यूनतम 55% अंक, पारिवारिक आय ₹3.5 लाख से कम</p>
+                <p>• <strong>आधिकारिक पोर्टल:</strong> National Scholarship Portal (scholarships.gov.in)</p>
+              </div>
+
+              <div class="pt-2 flex items-center justify-between">
+                <a href="https://scholarships.gov.in" target="_blank" class="text-xs font-bold text-emerald-800 hover:underline flex items-center gap-1">
+                  <span>आधिकारिक पोर्टल खोलें</span>
+                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                </a>
+                <button onclick="saveScholarshipAlert('NMMSS')" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-lg text-xs font-semibold text-slate-700">
+                  रिमाइंडर सेट करें
+                </button>
+              </div>
+            </div>
+
+            <!-- Scheme 2 -->
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded">पात्र (Eligible)</span>
+                <span class="text-xs text-slate-400">प्रक्रिया जारी</span>
+              </div>
+              <h4 class="font-bold text-sm text-slate-900">उत्तर प्रदेश पोस्ट-मैट्रिक छात्रवृत्ति एवं शुल्क प्रतिपूर्ति</h4>
+              <p class="text-xs text-slate-600">आईटीआई, पॉलिटेक्निक और डिप्लोमा में अध्ययनरत यूपी के छात्रों हेतु पूर्ण शुल्क वापसी।</p>
+              
+              <div class="bg-slate-50 p-3 rounded-xl space-y-1 text-xs text-slate-700">
+                <p>• <strong>सहायता राशि:</strong> पूरा कॉलेज शुल्क + मासिक निर्वाह भत्ता</p>
+                <p>• <strong>पात्रता मानदंड:</strong> यूपी का मूल निवासी, मान्यता प्राप्त आईटीआई में नामांकित</p>
+                <p>• <strong>पोर्टल:</strong> scholarship.up.gov.in</p>
+              </div>
+
+              <div class="pt-2 flex items-center justify-between">
+                <a href="https://scholarship.up.gov.in" target="_blank" class="text-xs font-bold text-emerald-800 hover:underline flex items-center gap-1">
+                  <span>यूपी स्कॉलरशिप पोर्टल</span>
+                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                </a>
+                <button onclick="saveScholarshipAlert('UP Scholarship')" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-lg text-xs font-semibold text-slate-700">
+                  सहेजें
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- ================= STUDENT VIEW: OPPORTUNITIES ================= -->
+        <div id="view-opportunities" class="hidden space-y-6 max-w-6xl mx-auto text-left">
+          
+          <div>
+            <h2 class="text-2xl font-black text-slate-900" data-i18n="navOpportunities">अवसर और रोजगार (Opportunities)</h2>
+            <p class="text-xs text-slate-600 mt-0.5">सत्यापित सरकारी व निजी अप्रेंटिसशिप, इंटर्नशिप व स्वरोजगार सहायता</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            
+            <!-- Opp 1 -->
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-3">
+              <div>
+                <div class="flex items-center justify-between text-[11px]">
+                  <span class="bg-blue-100 text-blue-800 font-bold px-2 py-0.5 rounded">राष्ट्रीय अप्रेंटिसशिप (NAPS)</span>
+                  <span class="text-slate-400">अयोध्या / सुल्तानपुर</span>
+                </div>
+                <h4 class="font-bold text-sm text-slate-900 mt-2">सोलर प्लांट मेंटेनेंस अप्रेंटिस</h4>
+                <p class="text-xs text-slate-500">ग्रीनपावर एनर्जी सॉल्यूशंस प्रा. लि.</p>
+                
+                <div class="mt-3 text-xs text-slate-600 space-y-1 bg-slate-50 p-2.5 rounded-xl">
+                  <p>• <strong>स्टाइपेंड:</strong> ₹9,000 / माह (बैंक खाते में)</p>
+                  <p>• <strong>योग्यता:</strong> 10वीं + वोकेशनल/आईटीआई प्रमाणपत्र</p>
+                  <p>• <strong>अवधि:</strong> 1 वर्ष (अनुभव प्रमाण-पत्र सहित)</p>
+                </div>
+              </div>
+
+              <button onclick="applySampleOpportunity('सोलर प्लांट मेंटेनेंस अप्रेंटिस')" class="w-full py-2 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs rounded-xl shadow-sm">
+                आवेदन फॉर्म भरें
+              </button>
+            </div>
+
+            <!-- Opp 2 -->
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-3">
+              <div>
+                <div class="flex items-center justify-between text-[11px]">
+                  <span class="bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded">स्व-रोजगार लोन</span>
+                  <span class="text-slate-400">सरकारी बैंक</span>
+                </div>
+                <h4 class="font-bold text-sm text-slate-900 mt-2">मुद्रा योजना: सोलर रूफटॉप सर्विस किट</h4>
+                <p class="text-xs text-slate-500">PMMY शिशु लोन सहायता (बिना गारंटी)</p>
+                
+                <div class="mt-3 text-xs text-slate-600 space-y-1 bg-slate-50 p-2.5 rounded-xl">
+                  <p>• <strong>वित्तीय सहायता:</strong> ₹50,000 तक टूलकिट व उपकरण लोन</p>
+                  <p>• <strong>ब्याज दर:</strong> रियायती सरकारी दर</p>
+                  <p>• <strong>सहायता:</strong> ग्रामीण बैंक मित्र द्वारा आवेदन</p>
+                </div>
+              </div>
+
+              <button onclick="applySampleOpportunity('PMMY मुद्रा लोन सहायता')" class="w-full py-2 bg-amber-500 hover:bg-amber-600 text-amber-950 font-bold text-xs rounded-xl shadow-sm">
+                आवेदन प्रक्रिया समझें
+              </button>
+            </div>
+
+            <!-- Opp 3 -->
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-3">
+              <div>
+                <div class="flex items-center justify-between text-[11px]">
+                  <span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded">स्थानीय कार्य</span>
+                  <span class="text-slate-400">ब्लॉक स्तर</span>
+                </div>
+                <h4 class="font-bold text-sm text-slate-900 mt-2">डिजिटल सेवा केंद्र (CSC) सहायक</h4>
+                <p class="text-xs text-slate-500">ई-डिस्ट्रिक्ट जन सेवा केंद्र, मिल्कीपुर</p>
+                
+                <div class="mt-3 text-xs text-slate-600 space-y-1 bg-slate-50 p-2.5 rounded-xl">
+                  <p>• <strong>कार्य:</strong> आधार सुधार, प्रमाण पत्र, ऑनलाइन फॉर्म</p>
+                  <p>• <strong>मानदेय:</strong> ₹6,500 / माह + प्रति फॉर्म कमीशन</p>
+                  <p>• <strong>योग्यता:</strong> बुनियादी हिंदी व अंग्रेजी टाइपिंग</p>
+                </div>
+              </div>
+
+              <button onclick="applySampleOpportunity('CSC सहायक मिल्कीपुर')" class="w-full py-2 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs rounded-xl shadow-sm">
+                आवेदन फॉर्म भरें
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- ================= STUDENT VIEW: GAMIFICATION & BADGES ================= -->
+        <div id="view-gamification" class="hidden space-y-6 max-w-5xl mx-auto text-left">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h2 class="text-2xl font-black text-slate-900" data-i18n="navGamification">खेल-आधारित प्रगति व पुरस्कार (Gamification)</h2>
+              <p class="text-xs text-slate-600 mt-0.5">बिना किसी दबाव के अपनी निरंतर सीखने की आदत को प्रोत्साहित करें</p>
+            </div>
+            
+            <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm">
+              <span class="text-lg">🔥</span>
+              <span class="text-xs font-bold text-slate-800">7 दिनों की लगातार पढ़ाई (Streak)</span>
+            </div>
+          </div>
+
+          <!-- XP & Progress Banner -->
+          <div class="p-6 rounded-3xl bg-gradient-to-r from-emerald-800 via-emerald-700 to-teal-800 text-white shadow-lg grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div>
+              <span class="text-xs text-emerald-200 font-medium">कुल संचित XP अंक</span>
+              <p class="text-3xl font-black text-white mt-1" id="gamify-xp-total">350 XP</p>
+              <p class="text-[11px] text-emerald-300 mt-1">अगला स्तर (Level 3) 500 XP पर</p>
+            </div>
+
+            <div>
+              <span class="text-xs text-emerald-200 font-medium">अर्जित बैज (Badges)</span>
+              <p class="text-3xl font-black text-amber-300 mt-1">3 / 8 बैज</p>
+              <p class="text-[11px] text-emerald-300 mt-1">करियर खोजी, पहला पाठ, माइलस्टोन निर्माता</p>
+            </div>
+
+            <div>
+              <span class="text-xs text-emerald-200 font-medium">सप्ताह की चुनौती</span>
+              <p class="text-xs font-bold text-white mt-1">सोलर सेफ्टी वीडियो क्विज पूरा करें</p>
+              <button onclick="claimChallengeReward()" class="mt-2 px-3 py-1 bg-amber-400 text-amber-950 font-bold text-xs rounded-lg shadow hover:bg-amber-300">
+                रिवॉर्ड क्लेम करें (+50 XP)
+              </button>
+            </div>
+          </div>
+
+          <!-- Badges Showcase -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+            <h3 class="font-bold text-sm text-slate-800">आपके बैज (Badges Showcase)</h3>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+              
+              <!-- Badge 1: Earned -->
+              <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex flex-col items-center">
+                <span class="text-3xl mb-1">🧭</span>
+                <h4 class="font-bold text-xs text-emerald-950">Career Explorer</h4>
+                <p class="text-[10px] text-emerald-700 mt-0.5">करियर डिस्कवरी पूर्ण की</p>
+                <span class="mt-2 text-[9px] bg-emerald-200 text-emerald-900 font-bold px-1.5 py-0.2 rounded">अनब्लॉक</span>
+              </div>
+
+              <!-- Badge 2: Earned -->
+              <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex flex-col items-center">
+                <span class="text-3xl mb-1">📖</span>
+                <h4 class="font-bold text-xs text-emerald-950">First Lesson</h4>
+                <p class="text-[10px] text-emerald-700 mt-0.5">पहला लर्निंग पाठ पूरा किया</p>
+                <span class="mt-2 text-[9px] bg-emerald-200 text-emerald-900 font-bold px-1.5 py-0.2 rounded">अनब्लॉक</span>
+              </div>
+
+              <!-- Badge 3: Earned -->
+              <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex flex-col items-center">
+                <span class="text-3xl mb-1">🎯</span>
+                <h4 class="font-bold text-xs text-emerald-950">Milestone Maker</h4>
+                <p class="text-[10px] text-emerald-700 mt-0.5">पहला रोडमैप माइलस्टोन पूर्ण</p>
+                <span class="mt-2 text-[9px] bg-emerald-200 text-emerald-900 font-bold px-1.5 py-0.2 rounded">अनब्लॉक</span>
+              </div>
+
+              <!-- Badge 4: Locked -->
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 opacity-60 flex flex-col items-center">
+                <span class="text-3xl mb-1 grayscale">🤝</span>
+                <h4 class="font-bold text-xs text-slate-700">Peer Collaborator</h4>
+                <p class="text-[10px] text-slate-500 mt-0.5">स्टडी ग्रुप में चर्चा में भाग लें</p>
+                <span class="mt-2 text-[9px] bg-slate-200 text-slate-600 font-bold px-1.5 py-0.2 rounded">🔒 बंद है</span>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ================= STUDENT VIEW: MENTORS ================= -->
+        <div id="view-mentors" class="hidden space-y-6 max-w-5xl mx-auto text-left">
+          <div>
+            <h2 class="text-2xl font-black text-slate-900">करियर मेंटर से मार्गदर्शन (Mentors)</h2>
+            <p class="text-xs text-slate-600 mt-0.5">अनुभवी पेशेवरों से 1-on-1 सत्र बुक करें और अपने करियर के सवालों के जवाब पाएँ।</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <!-- Mentor 1 -->
+            <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-start gap-4">
+              <div class="w-14 h-14 rounded-2xl bg-blue-100 text-blue-900 flex items-center justify-center text-2xl font-bold shrink-0">
+                👩‍💼
+              </div>
+              <div class="flex-1 space-y-1">
+                <div class="flex items-center justify-between">
+                  <h4 class="font-bold text-sm text-slate-900">अनन्या सेन (Ananya Sen)</h4>
+                  <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded">सत्यापित मेंटर</span>
+                </div>
+                <p class="text-xs text-slate-500">सीनियर सोलर प्रोजेक्ट मैनेजर, 8 वर्ष अनुभव</p>
+                <p class="text-[11px] text-slate-600">विशेषज्ञता: सोलर तकनीशियन सर्टिफिकेशन, इंटरव्यू तैयारी, सीवी समीक्षा।</p>
+                
+                <div class="pt-2 flex items-center justify-between">
+                  <span class="text-[10px] text-slate-400">भाषा: हिन्दी, English</span>
+                  <button onclick="requestMentorSession('अनन्या सेन')" class="px-3.5 py-1.5 bg-emerald-800 text-white rounded-lg text-xs font-bold hover:bg-emerald-900">
+                    मार्गदर्शन अनुरोध भेजें
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mentor 2 -->
+            <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-start gap-4">
+              <div class="w-14 h-14 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center text-2xl font-bold shrink-0">
+                👨‍🏫
+              </div>
+              <div class="flex-1 space-y-1">
+                <div class="flex items-center justify-between">
+                  <h4 class="font-bold text-sm text-slate-900">विकास वर्मा (Vikas Verma)</h4>
+                  <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded">सत्यापित मेंटर</span>
+                </div>
+                <p class="text-xs text-slate-500">ग्रामीण बैंक प्रबंधक एवं उद्यमिता सलाहकार</p>
+                <p class="text-[11px] text-slate-600">विशेषज्ञता: बैंक लोन प्रक्रिया, सीएससी संचालन, ग्रामीण वित्तीय साक्षरता।</p>
+                
+                <div class="pt-2 flex items-center justify-between">
+                  <span class="text-[10px] text-slate-400">भाषा: हिन्दी, अवधी</span>
+                  <button onclick="requestMentorSession('विकास वर्मा')" class="px-3.5 py-1.5 bg-emerald-800 text-white rounded-lg text-xs font-bold hover:bg-emerald-900">
+                    मार्गदर्शन अनुरोध भेजें
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= ROLE VIEW: TEACHER / FACILITATOR DASHBOARD ================= -->
+        <div id="view-facilitator-dashboard" class="hidden space-y-6 max-w-6xl mx-auto text-left">
+          
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-800 text-2xl flex items-center justify-center font-bold">
+                👨‍🏫
+              </div>
+              <div>
+                <span class="text-xs bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded">शिक्षक पोर्टल (Facilitator Workspace)</span>
+                <h2 class="text-xl font-black text-slate-900 mt-1">रमेश शर्मा (Ramesh Sharma)</h2>
+                <p class="text-xs text-slate-500">आईटीआई इंस्ट्रक्टर एवं वोकेशनल ट्रेनर • अयोध्या केंद्र</p>
+              </div>
+            </div>
+
+            <button onclick="showCreateCourseModal()" class="px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs rounded-xl shadow-sm flex items-center gap-1.5">
+              <i data-lucide="plus-circle" class="w-4 h-4"></i>
+              <span>नया कोर्स / वर्कशॉप जोड़ें</span>
+            </button>
+          </div>
+
+          <!-- Facilitator Metrics -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-sm">
+              <span class="text-[10px] text-slate-400 uppercase font-bold">जुड़े हुए छात्र</span>
+              <p class="text-2xl font-black text-slate-800 mt-1">28</p>
+              <span class="text-[10px] text-emerald-600 font-semibold">सहमति प्राप्त</span>
+            </div>
+            <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-sm">
+              <span class="text-[10px] text-slate-400 uppercase font-bold">सक्रिय कोर्सेज</span>
+              <p class="text-2xl font-black text-slate-800 mt-1">3</p>
+              <span class="text-[10px] text-slate-500">सोलर व वायरिंग</span>
+            </div>
+            <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-sm">
+              <span class="text-[10px] text-slate-400 uppercase font-bold">लंबित अनुरोध</span>
+              <p class="text-2xl font-black text-amber-600 mt-1">2</p>
+              <span class="text-[10px] text-slate-500">मार्गदर्शन सत्र</span>
+            </div>
+            <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-sm">
+              <span class="text-[10px] text-slate-400 uppercase font-bold">प्रैक्टिकल सत्यापन</span>
+              <p class="text-2xl font-black text-emerald-700 mt-1">19</p>
+              <span class="text-[10px] text-slate-500">सफलतापूर्वक सत्यापित</span>
+            </div>
+          </div>
+
+          <!-- Connected Students Table with Permission Rule (Blueprint Section 2) -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="font-bold text-sm text-slate-900">सहमति प्राप्त छात्र (Connected Students)</h3>
+                <p class="text-[11px] text-slate-500">गोपनीयता नियम: शिक्षक केवल उन्हीं छात्रों का डेटा देख सकते हैं जिन्होंने उनसे संपर्क किया है।</p>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-left">
+                <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
+                  <tr>
+                    <th class="p-3">छात्र का नाम</th>
+                    <th class="p-3">पाठ्यक्रम / रुचि</th>
+                    <th class="p-3">प्रगति</th>
+                    <th class="p-3">अंतिम गतिविधि</th>
+                    <th class="p-3 text-right">कार्रवाई</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                  <tr>
+                    <td class="p-3 font-bold text-slate-800 flex items-center gap-2">
+                      <div class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 text-[10px] flex items-center justify-center font-bold">PK</div>
+                      <span>प्रिया कुमारी (Priya Kumari)</span>
+                    </td>
+                    <td class="p-3">सोलर पीवी इंस्टॉलेशन</td>
+                    <td class="p-3">
+                      <span class="font-bold text-emerald-700">चरण 3 (वर्कशॉप जारी)</span>
+                    </td>
+                    <td class="p-3 text-slate-500">आज 10:30 AM</td>
+                    <td class="p-3 text-right">
+                      <button onclick="verifyStudentMilestone('प्रिया कुमारी')" class="px-2.5 py-1 bg-emerald-800 text-white rounded text-[11px] font-semibold hover:bg-emerald-900">
+                        प्रैक्टिकल सत्यापित करें
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="p-3 font-bold text-slate-800 flex items-center gap-2">
+                      <div class="w-6 h-6 rounded-full bg-blue-100 text-blue-800 text-[10px] flex items-center justify-center font-bold">RS</div>
+                      <span>राहुल सिंह (Rahul Singh)</span>
+                    </td>
+                    <td class="p-3">बेसिक इलेक्ट्रिकल वायरिंग</td>
+                    <td class="p-3">
+                      <span class="font-bold text-slate-700">चरण 2 (थ्योरी पूर्ण)</span>
+                    </td>
+                    <td class="p-3 text-slate-500">कल</td>
+                    <td class="p-3 text-right">
+                      <button onclick="verifyStudentMilestone('राहुल सिंह')" class="px-2.5 py-1 bg-slate-100 text-slate-700 rounded text-[11px] font-semibold hover:bg-slate-200">
+                        प्रगति देखें
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ================= ROLE VIEW: EMPLOYER / TRAINING PROVIDER DASHBOARD ================= -->
+        <div id="view-provider-dashboard" class="hidden space-y-6 max-w-6xl mx-auto text-left">
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-900 text-2xl flex items-center justify-center font-bold">
+                🏭
+              </div>
+              <div>
+                <span class="text-xs bg-purple-100 text-purple-900 font-bold px-2 py-0.5 rounded">प्रशिक्षक एवं नियोक्ता पोर्टल</span>
+                <h2 class="text-xl font-black text-slate-900 mt-1">कौशल विकास केंद्र / KisanTech Partner</h2>
+                <p class="text-xs text-slate-500">सत्यापित ट्रेनिंग प्रोवाइडर • अयोध्या व लखनऊ</p>
+              </div>
+            </div>
+
+            <button onclick="showCreateListingModal()" class="px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs rounded-xl shadow-sm flex items-center gap-1.5">
+              <i data-lucide="plus-circle" class="w-4 h-4"></i>
+              <span>नई अप्रेंटिसशिप / नौकरी लिस्ट करें</span>
+            </button>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+            <h3 class="font-bold text-sm text-slate-900">सक्रिय लिस्टिंग और प्राप्त आवेदन (Active Postings)</h3>
+            
+            <div class="space-y-3">
+              <div class="p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+                <div>
+                  <span class="text-[10px] bg-blue-100 text-blue-800 font-bold px-1.5 py-0.5 rounded">अप्रेंटिसशिप</span>
+                  <h4 class="font-bold text-xs text-slate-900 mt-1">सोलर रूफटॉप ट्रेनी अप्रेंटिस (अयोध्या)</h4>
+                  <p class="text-[11px] text-slate-500">₹8,500 स्टाइपेंड • 14 आवेदन प्राप्त</p>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button onclick="viewApplicantsModal('सोलर रूफटॉप ट्रेनी')" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-lg text-xs font-semibold text-slate-800">
+                    आवेदन देखें (14)
+                  </button>
+                  <span class="text-[11px] text-emerald-700 font-bold bg-emerald-50 px-2 py-1 rounded">सत्यापित सक्रिय</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= ROLE VIEW: ADMIN DASHBOARD ================= -->
+        <div id="view-admin-dashboard" class="hidden space-y-6 max-w-6xl mx-auto text-left">
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <span class="text-xs bg-red-100 text-red-900 font-bold px-2 py-0.5 rounded">राष्ट्रीय कौशल प्रशासन (Admin Oversight)</span>
+              <h2 class="text-xl font-black text-slate-900 mt-1">प्लेटफॉर्म सत्यापन एवं नियंत्रण बोर्ड</h2>
+              <p class="text-xs text-slate-500">सिमुलेटेड एडमिन कंसोल • सामग्री मॉडरेशन, सुरक्षा व संस्थान ऑडिट</p>
+            </div>
+            <span class="text-xs bg-slate-100 text-slate-700 font-bold px-3 py-1.5 rounded-xl border border-slate-200">
+              प्रोटोकॉल v2.4 (Citi Hackathon)
+            </span>
+          </div>
+
+          <!-- Admin Quick Metrics -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-sm">
+              <span class="text-[10px] text-slate-400 uppercase font-bold">लंबित संस्थान सत्यापन</span>
+              <p class="text-2xl font-black text-amber-600 mt-1">4</p>
+              <span class="text-[10px] text-slate-500">जाँच आवश्यक</span>
+            </div>
+            <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-sm">
+              <span class="text-[10px] text-slate-400 uppercase font-bold">कुल पंजीकृत छात्र</span>
+              <p class="text-2xl font-black text-emerald-800 mt-1">1,248</p>
+              <span class="text-[10px] text-emerald-600">सिमुलेटेड डेटा</span>
+            </div>
+            <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-sm">
+              <span class="text-[10px] text-slate-400 uppercase font-bold">रिपोर्टेड लिस्टिंग</span>
+              <p class="text-2xl font-black text-slate-800 mt-1">0</p>
+              <span class="text-[10px] text-emerald-600">सुरक्षित स्थिति</span>
+            </div>
+            <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-sm">
+              <span class="text-[10px] text-slate-400 uppercase font-bold">सक्रिय भाषाएँ</span>
+              <p class="text-2xl font-black text-slate-800 mt-1">3</p>
+              <span class="text-[10px] text-slate-500">हिन्दी, Eng, मराठी</span>
+            </div>
+          </div>
+
+          <!-- Pending Verifications Queue -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+            <h3 class="font-bold text-sm text-slate-900">सत्यापन अनुरोध (Verification Queue)</h3>
+            <div class="space-y-2 text-xs">
+              <div class="p-3 rounded-xl border border-slate-200 flex items-center justify-between">
+                <div>
+                  <h4 class="font-bold text-slate-800">कौशल विकास केंद्र, गोण्डा (प्राइवेट आईटीआई)</h4>
+                  <p class="text-slate-500 text-[11px]">दस्तावेज: NCVT मान्यता प्रमाणपत्र #UP-2024-89</p>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button onclick="adminApprove(this, 'Approved')" class="px-3 py-1 bg-emerald-800 text-white rounded font-bold hover:bg-emerald-900">सत्यापित करें</button>
+                  <button onclick="adminApprove(this, 'Rejected')" class="px-3 py-1 bg-rose-100 text-rose-800 rounded font-bold hover:bg-rose-200">खारिज करें</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ================= AKS AI FLOATING ASSISTANT (Across All Pages) ================= -->
+  <!-- Floating launcher button in bottom-right corner -->
+  <div class="fixed bottom-6 right-6 z-50">
+    <button onclick="toggleAksDrawer()" id="aks-launcher-btn" class="flex items-center gap-2.5 px-4 py-3 rounded-full bg-emerald-800 hover:bg-emerald-900 text-white shadow-2xl hover:shadow-emerald-900/40 ring-4 ring-emerald-500/20 transition-all transform hover:scale-105 group">
+      <div class="w-7 h-7 rounded-full bg-white text-emerald-800 flex items-center justify-center font-black text-sm shadow">
+        🤖
+      </div>
+      <div class="text-left hidden sm:block">
+        <p class="text-xs font-bold leading-tight">अक्स (Aks AI)</p>
+        <p class="text-[9px] text-emerald-200 leading-tight">सहायक से पूछें</p>
+      </div>
+      <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+    </button>
+  </div>
+
+  <!-- AKS AI DRAWER PANEL -->
+  <div id="aks-drawer" class="hidden fixed inset-y-0 right-0 w-full sm:w-96 bg-white shadow-2xl border-l border-slate-200 flex flex-col justify-between z-50 transition-all">
+    
+    <!-- Header -->
+    <div class="p-4 bg-emerald-800 text-white flex items-center justify-between shrink-0">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-xl">
+          🤖
+        </div>
+        <div>
+          <h3 class="font-bold text-sm">अक्स एआई (Aks AI)</h3>
+          <p class="text-[10px] text-emerald-200" id="aks-context-label">संदर्भ: करियर डिस्कवरी पृष्ठ</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="toggleAksAudio()" id="aks-tts-btn" title="Toggle voice narration" class="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs">
+          <i data-lucide="volume-2" class="w-4 h-4"></i>
+        </button>
+        <button onclick="toggleAksDrawer()" class="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Chat Stream Area -->
+    <div id="aks-chat-stream" class="flex-1 p-4 overflow-y-auto space-y-3.5 text-xs text-left custom-scrollbar bg-slate-50">
+      
+      <!-- Aks Welcome Message -->
+      <div class="flex items-start gap-2.5">
+        <div class="w-7 h-7 rounded-full bg-emerald-800 text-white flex items-center justify-center text-xs shrink-0 font-bold">🤖</div>
+        <div class="bg-white p-3.5 rounded-2xl rounded-tl-none border border-slate-200 shadow-sm space-y-1.5 text-slate-800 max-w-[85%]">
+          <p class="font-bold text-emerald-800">नमस्ते! मैं आपका करियर सहायक अक्स (Aks) हूँ।</p>
+          <p>आप मुझसे अपनी रुचियों, स्थानीय आईटीआई, छात्रवृत्ति और करियर के बारे में अपनी मातृभाषा में कभी भी पूछ सकते हैं।</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Contextual Prompt Suggestions -->
+    <div class="px-3 py-2 bg-slate-100 border-t border-slate-200 overflow-x-auto whitespace-nowrap space-x-1.5 text-[11px] text-left">
+      <button onclick="useQuickPrompt('सोलर तकनीशियन बनने में कुल कितना खर्च आता है?')" class="px-2.5 py-1 rounded-full bg-white border border-slate-300 text-slate-700 hover:border-emerald-600 transition">
+        💰 सोलर कोर्स का खर्च?
+      </button>
+      <button onclick="useQuickPrompt('मेरे जिले में सरकारी आईटीआई कहाँ है?')" class="px-2.5 py-1 rounded-full bg-white border border-slate-300 text-slate-700 hover:border-emerald-600 transition">
+        📍 पास का ITI कॉलेज?
+      </button>
+      <button onclick="useQuickPrompt('स्कॉलरशिप के लिए कौन-से दस्तावेज चाहिए?')" class="px-2.5 py-1 rounded-full bg-white border border-slate-300 text-slate-700 hover:border-emerald-600 transition">
+        📑 स्कॉलरशिप दस्तावेज?
+      </button>
+    </div>
+
+    <!-- Aks Input Box -->
+    <div class="p-3 bg-white border-t border-slate-200">
+      <form onsubmit="handleAksSubmit(event)" class="flex items-center gap-2">
+        <input type="text" id="aks-input" placeholder="यहाँ अपना सवाल पूछें..." class="flex-1 text-xs p-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:outline-none">
+        
+        <!-- Voice Input simulation button -->
+        <button type="button" onclick="simulateAksVoiceInput()" title="Voice input" class="p-2.5 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-600">
+          <i data-lucide="mic" class="w-4 h-4"></i>
+        </button>
+
+        <button type="submit" class="p-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white shadow">
+          <i data-lucide="send" class="w-4 h-4"></i>
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- ================= MODALS & OVERLAYS ================= -->
+  
+  <!-- Generic Action Modal (Enrollment / Contact / Mentor Booking) -->
+  <div id="action-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 text-left space-y-4 shadow-2xl border border-slate-200">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+        <h3 class="font-bold text-sm text-slate-900" id="modal-title">सहमति व संपर्क अनुरोध</h3>
+        <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <p class="text-xs text-slate-600" id="modal-desc">
+        आप <strong id="modal-entity-name" class="text-slate-900">राजकीय ITI</strong> से संपर्क कर रहे हैं।
+      </p>
+
+      <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200 text-xs text-emerald-900 space-y-1">
+        <p class="font-bold">🔒 डेटा गोपनीयता सुरक्षा (Privacy Protected):</p>
+        <p>इस अनुरोध पर केवल आपका नाम, शिक्षा स्तर और पसंदीदा संपर्क समय साझा किया जाएगा। आपका फोन नंबर सुरक्षित रहेगा।</p>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-slate-700 mb-1">आप क्या मार्गदर्शन चाहते हैं? (वैकल्पिक)</label>
+        <textarea id="modal-user-note" rows="2" placeholder="उदाहरण: मैं आगामी बैच के लिए एडमिशन प्रक्रिया और समय जानना चाहती हूँ..." class="w-full text-xs p-2 rounded-xl border border-slate-300 focus:outline-none"></textarea>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-2">
+        <button onclick="closeModal()" class="px-4 py-2 text-xs font-semibold rounded-xl border border-slate-300 hover:bg-slate-50">रद्द करें</button>
+        <button onclick="confirmModalAction()" class="px-5 py-2 text-xs font-bold rounded-xl bg-emerald-800 text-white hover:bg-emerald-900 shadow">अनुरोध भेजें (Confirm)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Video Explainer Modal -->
+  <div id="video-modal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 text-left space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+        <h3 class="font-bold text-sm text-slate-900">Udaan — ग्रामीण युवाओं का सशक्तिकरण</h3>
+        <button onclick="closeVideoModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      
+      <!-- Video Simulator Canvas / Card -->
+      <div class="w-full aspect-video bg-slate-900 rounded-2xl flex flex-col items-center justify-center text-white p-6 text-center space-y-3">
+        <div class="w-16 h-16 rounded-full bg-emerald-600/80 flex items-center justify-center shadow-lg cursor-pointer hover:scale-110 transition-transform">
+          <i data-lucide="play" class="w-8 h-8 fill-white ml-1"></i>
+        </div>
+        <p class="text-xs text-slate-300 font-medium">"गाँव से शहर तक, हर छात्र के हाथ में सही करियर और सरकारी योजना की जानकारी।"</p>
+        <span class="text-[10px] bg-slate-800 text-emerald-400 px-2 py-0.5 rounded">सिमुलेटेड वीडियो पूर्वावलोकन (Citi Hackathon 2026)</span>
+      </div>
+
+      <p class="text-xs text-slate-500">यह वीडियो प्रदर्शित करता है कि कैसे एक 12वीं की ग्रामीण छात्रा बिना किसी कोचिंग के सही वोकेशनल करियर पा सकती है।</p>
+    </div>
+  </div>
+
+  <!-- Toast Notification Capsule -->
+  <div id="toast-capsule" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs px-4 py-2.5 rounded-full shadow-2xl flex items-center gap-2 z-50 border border-slate-700">
+    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+    <span id="toast-message">कार्रवाई सफल!</span>
+  </div>
+
+  <!-- ================= JAVASCRIPT STATE ENGINE ================= -->
+  <script>
+    // Global Application State
+    const UdaanApp = {
+      currentLang: 'hi', // 'hi' or 'en'
+      currentRole: 'student', // 'student', 'facilitator', 'mentor', 'provider', 'admin'
+      currentView: 'landing', // 'landing', 'role_select', 'student_register', 'student_dashboard', 'explore_careers', 'career_matches', 'roadmap', 'courses', 'scholarships', 'opportunities', 'gamification', 'mentors', 'facilitator_dashboard', 'provider_dashboard', 'admin_dashboard'
+      studentProfile: {
+        name: 'प्रिया कुमारी',
+        nameEn: 'Priya Kumari',
+        education: 'Class 12',
+        status: 'studying',
+        state: 'उत्तर प्रदेश',
+        district: 'अयोध्या (Ayodhya)',
+        budget: 'free',
+        xp: 350,
+        level: 2,
+        streak: 7,
+        selectedCareer: 'solar',
+        activeMilestone: 3
+      },
+      aksHistory: [],
+      ttsEnabled: true
+    };
+
+    // Centralized Bilingual Translation Dictionary (Blueprint Section 10)
+    const i18nDictionary = {
+      hi: {
+        tagline: 'सीखें • बढ़ें • सफल हों (Learn • Grow • Achieve)',
+        login: 'लॉग इन',
+        register: 'रजिस्टर करें',
+        heroBadge: 'ग्रामीण भारत के युवाओं के लिए समर्पित',
+        heroH1: 'आपकी पृष्ठभूमि,',
+        heroH2: 'आपके भविष्य की सीमा नहीं है।',
+        heroSub: 'अपनी रुचियों को खोजें, जरूरी कौशल सीखें और शिक्षा, छात्रवृत्ति व स्थानीय रोजगार के अवसरों तक अपनी भाषा में, अपने समय के अनुसार पहुँचें।',
+        heroCta: 'आज ही शुरुआत करें (Start Journey)',
+        heroVideoBtn: 'वीडियो देखें (Watch Video)',
+        stat1: 'छात्रों का लक्ष्य',
+        stat2: 'STEM व वोकेशनल',
+        stat3: 'हिन्दी, अंग्रेजी व अन्य',
+        stat4: 'सरकारी मान्यता प्राप्त',
+        howItWorksTitle: 'Udaan कैसे काम करता है?',
+        howItWorksSub: 'रुचि से लेकर स्थानीय रोजगार व अवसर तक एक सम्पूर्ण यात्रा',
+        step1Title: '1. खोजें (Discover)',
+        step1Desc: 'अपनी रुचियों, ताकत और पारिवारिक प्राथमिकताओं को समझें।',
+        step2Title: '2. विकल्प जानें (Explore)',
+        step2Desc: 'आपके लिए उपयुक्त विभिन्न करियर पथ व तुलनात्मक रिपोर्ट पाएँ।',
+        step3Title: '3. कौशल सीखें (Learn)',
+        step3Desc: 'स्थानीय आईटीआई, कोर्सेज और सत्यापित शिक्षकों के साथ जुड़ें।',
+        step4Title: '4. अनुभव बनाएँ (Plan)',
+        step4Desc: 'प्रैक्टिकल प्रोजेक्ट, प्रमाण-पत्र और पोर्टफोलियो तैयार करें।',
+        step5Title: '5. अवसर पाएँ (Advance)',
+        step5Desc: 'छात्रवृत्ति, अप्रेंटिसशिप, सरकारी परीक्षाएं और नौकरी के अवसर।',
+        domainsTitle: 'करियर विकल्पों की विस्तृत दुनिया',
+        domainsSub: 'सिर्फ लोकप्रिय नौकरियां नहीं, बल्कि ग्रामीण और उभरते आधुनिक क्षेत्र',
+        seeAllCareers: 'सभी करियर विकल्प देखें',
+        chooseRoleTitle: 'खाता बनाएँ (Choose Your Role)',
+        chooseRoleSub: 'अपनी भूमिका चुनें ताकि हम आपको सबसे अनुकूल व सुरक्षित अनुभव दे सकें।',
+        roleStudent: 'छात्र / शिक्षार्थी (Student)',
+        roleStudentDesc: 'करियर खोजें, कौशल सीखें, शिक्षकों और मेंटर्स से जुड़ें और छात्रवृत्ति पाएँ।',
+        roleTeacher: 'शिक्षक / सुविधा प्रदाता (Facilitator)',
+        roleTeacherDesc: 'कोर्स बनाएँ, छात्रों को पढ़ाएँ, उनकी सहमति पर प्रगति देखें व व्यावहारिक प्रशिक्षण दें।',
+        roleMentor: 'मेंटर (Career Mentor)',
+        roleMentorDesc: 'करियर मार्गदर्शन दें, छात्रों को साक्षात्कार और उद्योग की समझ में मदद करें।',
+        roleEmployer: 'नियोक्ता / प्रशिक्षण संस्थान (Provider)',
+        roleEmployerDesc: 'इंटर्नशिप, अप्रेंटिसशिप, प्रशिक्षण कार्यक्रम और नौकरियां सूचीबद्ध करें।',
+        roleAdmin: 'प्रशासक (Admin / Govt Partner)',
+        roleAdminDesc: 'प्लेटफॉर्म का प्रबंधन करें, सत्यापन, सुरक्षा और गुणवत्ता बनाए रखें।',
+        yourSpace: 'आपका स्थान (Your Space)',
+        account: 'खाता व सहायता (Account)',
+        navDashboard: 'डैशबोर्ड (Dashboard)',
+        navCareerPath: 'करियर खोज (Career Path)',
+        navMyLearning: 'मेरी सीखने की योजना (My Learning)',
+        navCourses: 'पाठ्यक्रम और संस्थान (Courses)',
+        navScholarships: 'छात्रवृत्तियाँ और परीक्षाएँ (Scholarships)',
+        navOpportunities: 'अवसर व नौकरियाँ (Opportunities)',
+        navGamification: 'खेल-आधारित प्रगति (Gamification)',
+        navMentors: 'मेंटर मार्गदर्शन (Mentors)',
+        navProfile: 'मेरी प्रोफाइल (My Profile)',
+        navSettings: 'सेटिंग्स (Settings)',
+        navHelp: 'मदद व सुझाव (Help & Support)',
+        navLogout: 'लॉग आउट (Logout)',
+        ctaChooseCareer: 'अपना करियर मार्ग चुनें',
+        viewActiveRoadmap: 'वर्तमान रोडमैप देखें',
+        saveRoadmap: 'करियर योजना सहेजें',
+        exploreTitle: 'करियर की खोज (Explore Careers)'
+      },
+      en: {
+        tagline: 'Learn • Grow • Achieve',
+        login: 'Login',
+        register: 'Register',
+        heroBadge: 'Dedicated to the Youth of Rural India',
+        heroH1: 'Your background is not',
+        heroH2: 'the limit of your future.',
+        heroSub: 'Discover your interests, learn essential practical skills, and access scholarships and local opportunities in your own language, on your schedule.',
+        heroCta: 'Start Your Journey',
+        heroVideoBtn: 'Watch Video',
+        stat1: 'Students Goal',
+        stat2: 'STEM & Vocational',
+        stat3: 'Indian Languages',
+        stat4: 'Govt. Recognized',
+        howItWorksTitle: 'How Udaan Works',
+        howItWorksSub: 'A complete end-to-end journey from interest discovery to execution',
+        step1Title: '1. Discover',
+        step1Desc: 'Understand your unique interests, strengths, and constraints.',
+        step2Title: '2. Explore',
+        step2Desc: 'Find multiple viable career options with tailored fit analysis.',
+        step3Title: '3. Learn',
+        step3Desc: 'Connect with local ITIs, polytechnics, and verified mentors.',
+        step4Title: '4. Plan',
+        step4Desc: 'Build practical projects, certifications, and real portfolios.',
+        step5Title: '5. Advance',
+        step5Desc: 'Unlock scholarships, apprenticeships, and local employment.',
+        domainsTitle: 'Explore Diverse Career Domains',
+        domainsSub: 'Beyond saturated conventional paths—discover high-potential vocational & digital fields',
+        seeAllCareers: 'Explore All Career Options',
+        chooseRoleTitle: 'Choose Your Role',
+        chooseRoleSub: 'Select your role so we can personalize a secure, compliant experience for you.',
+        roleStudent: 'Student / Learner',
+        roleStudentDesc: 'Discover careers, build skills, access mentors, scholarships, and verified jobs.',
+        roleTeacher: 'Teacher / Facilitator',
+        roleTeacherDesc: 'Create workshops, mentor enrolled students with consent, and verify milestones.',
+        roleMentor: 'Career Mentor',
+        roleMentorDesc: 'Provide 1-on-1 industry guidance, resume review, and interview preparation.',
+        roleEmployer: 'Employer / Training Provider',
+        roleEmployerDesc: 'Publish certified courses, apprenticeships, internships, and hiring listings.',
+        roleAdmin: 'Platform Administrator',
+        roleAdminDesc: 'Verify organizations, manage localization, compliance, and platform oversight.',
+        yourSpace: 'Your Space',
+        account: 'Account & Support',
+        navDashboard: 'Dashboard',
+        navCareerPath: 'Career Discovery',
+        navMyLearning: 'My Learning Path',
+        navCourses: 'Courses & Institutes',
+        navScholarships: 'Scholarships & Exams',
+        navOpportunities: 'Opportunities & Jobs',
+        navGamification: 'Gamification & Rewards',
+        navMentors: 'Mentors & Guidance',
+        navProfile: 'My Profile',
+        navSettings: 'Settings',
+        navHelp: 'Help & Support',
+        navLogout: 'Logout',
+        ctaChooseCareer: 'Choose Your Career Path',
+        viewActiveRoadmap: 'View Active Roadmap',
+        saveRoadmap: 'Save Career Roadmap',
+        exploreTitle: 'Explore Careers'
+      }
+    };
+
+    // Role-specific sidebar navigation configurations (Blueprint Section 3 & 4)
+    const roleNavConfigs = {
+      student: [
+        { id: 'student_dashboard', icon: 'layout-dashboard', labelHi: 'डैशबोर्ड', labelEn: 'Dashboard' },
+        { id: 'explore_careers', icon: 'compass', labelHi: 'करियर की खोज', labelEn: 'Explore Careers' },
+        { id: 'roadmap', icon: 'map', labelHi: 'मेरा करियर रोडमैप', labelEn: 'My Career Roadmap' },
+        { id: 'courses', icon: 'book-open', labelHi: 'कोर्स और ITI', labelEn: 'Courses & ITIs' },
+        { id: 'scholarships', icon: 'award', labelHi: 'छात्रवृत्तियां और परीक्षाएं', labelEn: 'Scholarships & Exams' },
+        { id: 'opportunities', icon: 'briefcase', labelHi: 'अवसर व अप्रेंटिसशिप', labelEn: 'Opportunities' },
+        { id: 'gamification', icon: 'trophy', labelHi: 'पुरस्कार व प्रगति (XP)', labelEn: 'Gamification' },
+        { id: 'mentors', icon: 'users', labelHi: 'मेंटर से मार्गदर्शन', labelEn: 'Mentors' }
+      ],
+      facilitator: [
+        { id: 'facilitator_dashboard', icon: 'layout-dashboard', labelHi: 'शिक्षक डैशबोर्ड', labelEn: 'Teacher Dashboard' },
+        { id: 'courses', icon: 'book-open', labelHi: 'मेरे कोर्सेज', labelEn: 'My Courses' },
+        { id: 'facilitator_dashboard', icon: 'users', labelHi: 'सहमति प्राप्त छात्र', labelEn: 'Connected Students' },
+        { id: 'gamification', icon: 'check-circle-2', labelHi: 'माइलस्टोन सत्यापन', labelEn: 'Milestone Verifications' }
+      ],
+      mentor: [
+        { id: 'mentors', icon: 'layout-dashboard', labelHi: 'मेंटर कंसोल', labelEn: 'Mentor Console' },
+        { id: 'mentors', icon: 'calendar', labelHi: 'आगामी 1-on-1 सत्र', labelEn: 'Upcoming Sessions' },
+        { id: 'opportunities', icon: 'file-text', labelHi: 'सीवी व गाइडेंस सामग्री', labelEn: 'Guidance Material' }
+      ],
+      provider: [
+        { id: 'provider_dashboard', icon: 'layout-dashboard', labelHi: 'प्रदाता डैशबोर्ड', labelEn: 'Provider Dashboard' },
+        { id: 'opportunities', icon: 'briefcase', labelHi: 'मेरी लिस्टिंग्स', labelEn: 'My Postings' },
+        { id: 'provider_dashboard', icon: 'users', labelHi: 'उम्मीदवार आवेदन', labelEn: 'Applications' }
+      ],
+      admin: [
+        { id: 'admin_dashboard', icon: 'shield-check', labelHi: 'एडमिन ओवरव्यू', labelEn: 'Admin Overview' },
+        { id: 'admin_dashboard', icon: 'check-square', labelHi: 'संस्थान सत्यापन', labelEn: 'Verifications' },
+        { id: 'admin_dashboard', icon: 'sliders', labelHi: 'भाषा व अनुपालन', labelEn: 'Localization & Audit' }
+      ]
+    };
+
+    // Initialize Application on Window Load
+    window.onload = function() {
+      // Check stored preference or default to Hindi as per blueprint
+      const savedLang = localStorage.getItem('udaan_lang') || 'hi';
+      switchLanguage(savedLang);
+      
+      // Initialize Lucide icons
+      lucide.createIcons();
+
+      // Setup initial view
+      navigateTo('landing');
+
+      // Update Aks context initial state
+      updateAksContext('landing');
+    };
+
+    // View Navigation Handler
+    function navigateTo(viewId) {
+      UdaanApp.currentView = viewId;
+      
+      // Update UI Header and Nav
+      const isAuthView = !['landing', 'role_select', 'student_register'].includes(viewId);
+      
+      document.getElementById('view-landing').classList.add('hidden');
+      document.getElementById('view-role-select').classList.add('hidden');
+      document.getElementById('view-student-register').classList.add('hidden');
+      document.getElementById('authenticated-wrapper').classList.add('hidden');
+
+      // Hide all authenticated inner pages
+      const authViews = [
+        'view-student-dashboard', 'view-explore-careers', 'view-career-matches',
+        'view-roadmap', 'view-courses', 'view-scholarships', 'view-opportunities',
+        'view-gamification', 'view-mentors', 'view-facilitator-dashboard',
+        'view-provider-dashboard', 'view-admin-dashboard'
+      ];
+      authViews.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+      });
+
+      if (!isAuthView) {
+        document.getElementById('unauth-actions').classList.remove('hidden');
+        document.getElementById('auth-actions').classList.add('hidden');
+        document.getElementById('header-search-bar').classList.add('hidden');
+        
+        if (viewId === 'landing') document.getElementById('view-landing').classList.remove('hidden');
+        else if (viewId === 'role_select') document.getElementById('view-role-select').classList.remove('hidden');
+        else if (viewId === 'student_register') document.getElementById('view-student-register').classList.remove('hidden');
+      } else {
+        document.getElementById('unauth-actions').classList.add('hidden');
+        document.getElementById('auth-actions').classList.remove('hidden');
+        document.getElementById('auth-actions').classList.add('flex');
+        document.getElementById('header-search-bar').classList.remove('hidden');
+        document.getElementById('authenticated-wrapper').classList.remove('hidden');
+
+        // Route to the active authenticated page
+        let targetId = 'view-student-dashboard';
+        if (viewId === 'student_dashboard') targetId = 'view-student-dashboard';
+        else if (viewId === 'explore_careers') targetId = 'view-explore-careers';
+        else if (viewId === 'career_matches') targetId = 'view-career-matches';
+        else if (viewId === 'roadmap') targetId = 'view-roadmap';
+        else if (viewId === 'courses') targetId = 'view-courses';
+        else if (viewId === 'scholarships') targetId = 'view-scholarships';
+        else if (viewId === 'opportunities') targetId = 'view-opportunities';
+        else if (viewId === 'gamification') targetId = 'view-gamification';
+        else if (viewId === 'mentors') targetId = 'view-mentors';
+        else if (viewId === 'facilitator_dashboard') targetId = 'view-facilitator-dashboard';
+        else if (viewId === 'provider_dashboard') targetId = 'view-provider-dashboard';
+        else if (viewId === 'admin_dashboard') targetId = 'view-admin-dashboard';
+
+        const activePage = document.getElementById(targetId);
+        if (activePage) activePage.classList.remove('hidden');
+
+        renderSidebarNav(viewId);
+      }
+
+      // Refresh icons & update context
+      lucide.createIcons();
+      updateAksContext(viewId);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Role Switching Engine
+    function setRole(roleKey) {
+      UdaanApp.currentRole = roleKey;
+
+      // Update active state in demo bar
+      const roleBtns = ['student', 'facilitator', 'mentor', 'provider', 'admin'];
+      roleBtns.forEach(r => {
+        const btn = document.getElementById(`btn-role-${r}`);
+        if (btn) {
+          if (r === roleKey) {
+            btn.className = "px-2.5 py-0.5 text-xs font-bold bg-emerald-700 text-white transition";
+          } else {
+            btn.className = "px-2.5 py-0.5 text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition";
+          }
+        }
+      });
+
+      // Update Avatar Profile Display
+      const userDisplayName = document.getElementById('user-display-name');
+      const userSubLabel = document.getElementById('user-sub-label');
+      const userAvatar = document.getElementById('user-avatar');
+      const sideUserName = document.getElementById('side-user-name');
+      const sideUserRole = document.getElementById('side-user-role');
+      const sideUserLoc = document.getElementById('side-user-loc');
+      const sideUserAvatar = document.getElementById('side-user-avatar');
+
+      if (roleKey === 'student') {
+        userDisplayName.innerText = 'Priya Kumari';
+        userSubLabel.innerText = 'Class 12 • Ayodhya, UP';
+        userAvatar.innerText = 'PK';
+        sideUserName.innerText = 'Priya Kumari';
+        sideUserRole.innerText = 'Student • Class 12';
+        sideUserLoc.innerText = 'Ayodhya, UP';
+        sideUserAvatar.innerText = 'PK';
+        navigateTo('student_dashboard');
+      } else if (roleKey === 'facilitator') {
+        userDisplayName.innerText = 'Ramesh Sharma';
+        userSubLabel.innerText = 'ITI Instructor • Ayodhya';
+        userAvatar.innerText = 'RS';
+        sideUserName.innerText = 'Ramesh Sharma';
+        sideUserRole.innerText = 'Facilitator • ITI Ayodhya';
+        sideUserLoc.innerText = 'Beniganj Center';
+        sideUserAvatar.innerText = 'RS';
+        navigateTo('facilitator_dashboard');
+      } else if (roleKey === 'mentor') {
+        userDisplayName.innerText = 'Ananya Sen';
+        userSubLabel.innerText = 'Senior Solar Engineer';
+        userAvatar.innerText = 'AS';
+        sideUserName.innerText = 'Ananya Sen';
+        sideUserRole.innerText = 'Career Mentor • GreenTech';
+        sideUserLoc.innerText = 'Lucknow / Remote';
+        sideUserAvatar.innerText = 'AS';
+        navigateTo('mentors');
+      } else if (roleKey === 'provider') {
+        userDisplayName.innerText = 'KisanTech / SkillIndia';
+        userSubLabel.innerText = 'Training Partner';
+        userAvatar.innerText = 'KT';
+        sideUserName.innerText = 'KisanTech Partner';
+        sideUserRole.innerText = 'Training Provider';
+        sideUserLoc.innerText = 'UP State Operations';
+        sideUserAvatar.innerText = 'KT';
+        navigateTo('provider_dashboard');
+      } else if (roleKey === 'admin') {
+        userDisplayName.innerText = 'Govt Oversight Admin';
+        userSubLabel.innerText = 'Skill Mission UP';
+        userAvatar.innerText = 'AD';
+        sideUserName.innerText = 'Admin Console';
+        sideUserRole.innerText = 'State Oversight Board';
+        sideUserLoc.innerText = 'Lucknow HQ';
+        sideUserAvatar.innerText = 'AD';
+        navigateTo('admin_dashboard');
+      }
+
+      showToast(`भूमिका बदली गई: ${roleKey.toUpperCase()}`);
+    }
+
+    // Render Role Sidebar Nav Links dynamically
+    function renderSidebarNav(activeViewId) {
+      const container = document.getElementById('sidebar-nav-links');
+      if (!container) return;
+
+      const links = roleNavConfigs[UdaanApp.currentRole] || roleNavConfigs.student;
+      const isHi = UdaanApp.currentLang === 'hi';
+
+      container.innerHTML = links.map(link => {
+        const isActive = activeViewId === link.id;
+        const activeClass = isActive 
+          ? 'bg-emerald-800 text-white font-bold shadow-sm' 
+          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900';
+        const label = isHi ? link.labelHi : link.labelEn;
+
+        return `
+          <button onclick="navigateTo('${link.id}')" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs transition ${activeClass}">
+            <i data-lucide="${link.icon}" class="w-4 h-4 shrink-0"></i>
+            <span class="truncate">${label}</span>
+          </button>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    // Language Toggle
+    function toggleLangMenu() {
+      const dropdown = document.getElementById('lang-dropdown');
+      dropdown.classList.toggle('hidden');
+    }
+
+    function switchLanguage(langCode) {
+      UdaanApp.currentLang = langCode;
+      const label = document.getElementById('current-lang-label');
+      if (label) {
+        label.innerText = langCode === 'hi' ? 'हिन्दी' : (langCode === 'en' ? 'English' : 'मराठी');
+      }
+      document.getElementById('lang-dropdown').classList.add('hidden');
+
+      // Update static data-i18n elements
+      const dict = i18nDictionary[langCode] || i18nDictionary.hi;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) {
+          el.innerText = dict[key];
+        }
+      });
+
+      // Update dynamic elements and sidebar
+      if (document.getElementById('authenticated-wrapper').classList.contains('hidden') === false) {
+        renderSidebarNav(UdaanApp.currentView);
+      }
+
+      showToast(langCode === 'hi' ? 'भाषा: हिन्दी सक्रिय' : 'Language switched to English');
+    }
+
+    // Role Selection Action
+    function selectRoleAndRegister(role) {
+      if (role === 'student') {
+        navigateTo('student_register');
+        goToOnboardStep(1);
+      } else {
+        setRole(role);
+      }
+    }
+
+    // Onboarding Multi-step Stepper Logic (Blueprint Section 5)
+    function goToOnboardStep(stepNum) {
+      for (let i = 1; i <= 5; i++) {
+        const stepView = document.getElementById(`onboard-step-${i}`);
+        const badge = document.getElementById(`step-badge-${i}`);
+        if (stepView) stepView.classList.add('hidden');
+        if (badge) {
+          if (i <= stepNum) {
+            badge.className = "w-8 h-8 rounded-full bg-emerald-700 text-white font-bold text-xs flex items-center justify-center ring-4 ring-white shadow";
+          } else {
+            badge.className = "w-8 h-8 rounded-full bg-slate-200 text-slate-600 font-bold text-xs flex items-center justify-center ring-4 ring-white shadow";
+          }
+        }
+      }
+
+      const activeView = document.getElementById(`onboard-step-${stepNum}`);
+      if (activeView) activeView.classList.remove('hidden');
+
+      // Update step progress bar width
+      const progressPercent = ((stepNum - 1) / 4) * 100;
+      document.getElementById('step-progress-bar').style.width = `${progressPercent}%`;
+
+      // If Step 5 (Review), populate review data
+      if (stepNum === 5) {
+        document.getElementById('rev-name').innerText = document.getElementById('reg-name').value || 'प्रिया कुमारी';
+        document.getElementById('rev-edu').innerText = document.getElementById('reg-edu').options[document.getElementById('reg-edu').selectedIndex].text;
+        document.getElementById('rev-loc').innerText = document.getElementById('reg-district').value;
+        document.getElementById('rev-budget').innerText = document.getElementById('reg-budget').options[document.getElementById('reg-budget').selectedIndex].text;
+      }
+
+      window.scrollTo({ top: 100, behavior: 'smooth' });
+    }
+
+    function selectOnboardingMode(mode) {
+      if (mode === 'voice') {
+        showToast('वॉइस मोड सक्षम किया गया (Voice Assistant Ready)');
+        speakText('नमस्ते! मैं आपका उड़ान सहायक हूँ। चलिए आपका प्रोफाइल तैयार करते हैं।');
+      }
+      goToOnboardStep(2);
+    }
+
+    function completeStudentRegistration() {
+      // Trigger celebration confetti
+      confetti({
+        particleCount: 80,
+        spread: 60,
+        origin: { y: 0.6 }
+      });
+
+      showToast('खाता सफलतापूर्वक बनाया गया! स्वागत है प्रिया।');
+      setRole('student');
+    }
+
+    // Career Discovery Questionnaire Logic (Blueprint Section 7)
+    function setDiscoveryInputMode(mode) {
+      const textBtn = document.getElementById('disc-btn-text');
+      const voiceBtn = document.getElementById('disc-btn-voice');
+      const voiceBar = document.getElementById('voice-assistant-bar');
+
+      if (mode === 'voice') {
+        textBtn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 text-xs font-semibold";
+        voiceBtn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-700 text-white text-xs font-semibold";
+        voiceBar.classList.remove('hidden');
+        simulateVoiceSpeak();
+      } else {
+        voiceBtn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 text-xs font-semibold";
+        textBtn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-800 text-white text-xs font-semibold";
+        voiceBar.classList.add('hidden');
+      }
+    }
+
+    function simulateVoiceSpeak() {
+      speakText('प्रिया, आप किस तरह के माहौल में काम करना सबसे ज्यादा पसंद करेंगी? कंप्यूटर पर या फील्ड में हाथ से उपकरण जोड़ना?');
+    }
+
+    function generateCareerMatches() {
+      // Confetti & transition
+      confetti({
+        particleCount: 60,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+
+      showToast('AI विश्लेषण पूर्ण: 3 उपयुक्त करियर विकल्प तैयार हैं!');
+      navigateTo('career_matches');
+    }
+
+    function loadCareerRoadmap(careerId) {
+      UdaanApp.studentProfile.selectedCareer = careerId;
+      showToast('करियर रोडमैप तैयार किया गया!');
+      navigateTo('roadmap');
+    }
+
+    function completeCurrentMilestone() {
+      UdaanApp.studentProfile.xp += 100;
+      document.getElementById('sidebar-xp').innerText = UdaanApp.studentProfile.xp;
+      const totalEl = document.getElementById('gamify-xp-total');
+      if (totalEl) totalEl.innerText = `${UdaanApp.studentProfile.xp} XP`;
+
+      confetti({
+        particleCount: 100,
+        spread: 80,
+        origin: { y: 0.5 }
+      });
+
+      showToast('शानदार! माइलस्टोन पूरा हुआ: +100 XP प्राप्त हुआ!');
+    }
+
+    // Aks AI Chatbot Engine (Blueprint Section 9)
+    function toggleAksDrawer() {
+      const drawer = document.getElementById('aks-drawer');
+      drawer.classList.toggle('hidden');
+      if (!drawer.classList.contains('hidden')) {
+        lucide.createIcons();
+        document.getElementById('aks-input').focus();
+      }
+    }
+
+    function updateAksContext(viewId) {
+      const contextLabel = document.getElementById('aks-context-label');
+      if (!contextLabel) return;
+
+      const contexts = {
+        landing: 'संदर्भ: मुख्य पृष्ठ (Landing Overview)',
+        role_select: 'संदर्भ: भूमिका चयन (Role Selection)',
+        student_dashboard: 'संदर्भ: छात्र मुख्य डैशबोर्ड',
+        explore_careers: 'संदर्भ: करियर खोज प्रश्नावली',
+        career_matches: 'संदर्भ: अनुशंसित करियर विकल्प',
+        roadmap: 'संदर्भ: सोलर पीवी करियर रोडमैप',
+        courses: 'संदर्भ: स्थानीय आईटीआई व कोर्स डायरेक्टरी',
+        scholarships: 'संदर्भ: सरकारी छात्रवृत्तियां व परीक्षाएं',
+        opportunities: 'संदर्भ: अप्रेंटिसशिप व रोजगार अवसर',
+        gamification: 'संदर्भ: XP अंक और बैज प्रगति'
+      };
+
+      contextLabel.innerText = contexts[viewId] || 'संदर्भ: प्रोजेक्ट उड़ान सहायक';
+    }
+
+    function handleAksSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('aks-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      appendChatMessage('user', text);
+      input.value = '';
+
+      // Generate contextual intelligent response
+      setTimeout(() => {
+        const reply = getContextualAksReply(text, UdaanApp.currentView);
+        appendChatMessage('bot', reply);
+        if (UdaanApp.ttsEnabled) {
+          speakText(reply);
+        }
+      }, 600);
+    }
+
+    function useQuickPrompt(promptText) {
+      appendChatMessage('user', promptText);
+      setTimeout(() => {
+        const reply = getContextualAksReply(promptText, UdaanApp.currentView);
+        appendChatMessage('bot', reply);
+        if (UdaanApp.ttsEnabled) speakText(reply);
+      }, 500);
+    }
+
+    function appendChatMessage(sender, text) {
+      const chatStream = document.getElementById('aks-chat-stream');
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `flex items-start gap-2.5 ${sender === 'user' ? 'justify-end' : ''}`;
+
+      if (sender === 'bot') {
+        msgDiv.innerHTML = `
+          <div class="w-7 h-7 rounded-full bg-emerald-800 text-white flex items-center justify-center text-xs shrink-0 font-bold">🤖</div>
+          <div class="bg-white p-3.5 rounded-2xl rounded-tl-none border border-slate-200 shadow-sm space-y-1.5 text-slate-800 max-w-[85%] text-left">
+            <p>${text}</p>
+          </div>
+        `;
+      } else {
+        msgDiv.innerHTML = `
+          <div class="bg-emerald-800 text-white p-3.5 rounded-2xl rounded-tr-none shadow-sm space-y-1.5 max-w-[85%] text-left">
+            <p>${text}</p>
+          </div>
+          <div class="w-7 h-7 rounded-full bg-amber-400 text-amber-950 flex items-center justify-center text-xs shrink-0 font-bold">P</div>
+        `;
+      }
+
+      chatStream.appendChild(msgDiv);
+      chatStream.scrollTop = chatStream.scrollHeight;
+      lucide.createIcons();
+    }
+
+    function getContextualAksReply(query, context) {
+      const q = query.toLowerCase();
+
+      if (q.includes('खर्च') || q.includes('फीस') || q.includes('cost')) {
+        return 'राजकीय आईटीआई (ITI) और पीएम सूर्य घर योजना के तहत सोलर तकनीशियन का कोर्स पूरी तरह से निःशुल्क (Free) है। इसके अलावा पात्र छात्रों को परीक्षा और टूलकिट सहायता भी दी जाती है।';
+      }
+      if (q.includes('दस्तावेज') || q.includes('स्कॉलरशिप') || q.includes('scholarship')) {
+        return 'छात्रवृत्ति के लिए आपको 4 मुख्य दस्तावेज चाहिए: 1. आधार कार्ड, 2. बैंक पासबुक (आधार से लिंक), 3. आय प्रमाण पत्र (Income Certificate < ₹2.5 लाख), और 4. 10वीं/12वीं की मार्कशीट।';
+      }
+      if (q.includes('iti') || q.includes('कॉलेज') || q.includes('अयोध्या')) {
+        return 'अयोध्या में राजकीय औद्योगिक प्रशिक्षण संस्थान (ITI बेनीगंज) और मिल्कीपुर केंद्र में सौर ऊर्जा व इलेक्ट्रिकल के मान्यता प्राप्त बैच संचालित हो रहे हैं। आप हमारे "Courses" टैब से सीधा संपर्क कर सकते हैं।';
+      }
+      
+      // Default contextual responses
+      if (context === 'explore_careers' || context === 'career_matches') {
+        return 'आपकी रुचियों के विश्लेषण के अनुसार "सोलर तकनीशियन" और "डिजिटल सेवा केंद्र" आपके लिए सबसे व्यावहारिक हैं, क्योंकि इनमें कम समय में अच्छी कमाई और स्थानीय स्तर पर काम के अवसर हैं।';
+      }
+
+      return 'यह बहुत अच्छा सवाल है! प्रोजेक्ट उड़ान का उद्देश्य आपको शिक्षा से रोजगार तक आत्मनिर्भर बनाना है। आप अपनी वर्तमान योजना के अगले माइलस्टोन को पूरा करके आगे बढ़ सकते हैं।';
+    }
+
+    function openAksWithPrompt(prompt) {
+      const drawer = document.getElementById('aks-drawer');
+      drawer.classList.remove('hidden');
+      useQuickPrompt(prompt);
+    }
+
+    function toggleAksAudio() {
+      UdaanApp.ttsEnabled = !UdaanApp.ttsEnabled;
+      const btn = document.getElementById('aks-tts-btn');
+      if (UdaanApp.ttsEnabled) {
+        showToast('वॉइस वाचन सक्रिय (TTS Voice Active)');
+        btn.classList.add('bg-white/30');
+      } else {
+        showToast('वॉइस वाचन म्यूट किया गया');
+        btn.classList.remove('bg-white/30');
+      }
+    }
+
+    // Web Speech API Integration for natural voice readout
+    function speakText(text) {
+      if (!('speechSynthesis' in window) || !UdaanApp.ttsEnabled) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = UdaanApp.currentLang === 'hi' ? 'hi-IN' : 'en-US';
+      utterance.rate = 0.95;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function simulateAksVoiceInput() {
+      showToast('माइक्रोफोन सुन रहा है... (Listening...)');
+      speakText('मैं आपकी बात सुन रहा हूँ, कृपया अपना सवाल बोलें...');
+      setTimeout(() => {
+        useQuickPrompt('मुझे सोलर रूफटॉप योजना के बारे में विस्तार से बताएं');
+      }, 2000);
+    }
+
+    // Modal Actions
+    function openEnrollModal(entityName) {
+      document.getElementById('modal-title').innerText = 'प्रशिक्षण व मार्गदर्शन अनुरोध';
+      document.getElementById('modal-entity-name').innerText = entityName;
+      document.getElementById('action-modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('action-modal').classList.add('hidden');
+    }
+
+    function confirmModalAction() {
+      closeModal();
+      confetti({ particleCount: 50, spread: 60 });
+      showToast('आपका अनुरोध सुरक्षित रूप से भेज दिया गया है!');
+    }
+
+    function openVideoModal() {
+      document.getElementById('video-modal').classList.remove('hidden');
+    }
+
+    function closeVideoModal() {
+      document.getElementById('video-modal').classList.add('hidden');
+    }
+
+    function showDocChecklist() {
+      alert("छात्रवृत्ति दस्तावेज चेकलिस्ट:\n1. आधार कार्ड (बैंक से जुड़ा हुआ)\n2. आय प्रमाण पत्र (सालाना आय ₹2.5 लाख से कम)\n3. जाति/निवास प्रमाण पत्र\n4. 10वीं/12वीं अंकतालिका\n5. कॉलेज/आईटीआई प्रवेश रसीद");
+    }
+
+    function saveScholarshipAlert(name) {
+      showToast(`${name} का रिमाइंडर आपके नोटिफिकेशन में जोड़ दिया गया है!`);
+    }
+
+    function applySampleOpportunity(title) {
+      showToast(`'${title}' के लिए आवेदन जमा हुआ! स्थिति: समीक्षाधीन`);
+      confetti({ particleCount: 50, spread: 50 });
+    }
+
+    function claimChallengeReward() {
+      UdaanApp.studentProfile.xp += 50;
+      document.getElementById('sidebar-xp').innerText = UdaanApp.studentProfile.xp;
+      document.getElementById('gamify-xp-total').innerText = `${UdaanApp.studentProfile.xp} XP`;
+      confetti({ particleCount: 80, spread: 70 });
+      showToast('बधाई! +50 XP क्लेम किया गया!');
+    }
+
+    function toggleSaveCareer(id, btn) {
+      btn.classList.toggle('text-emerald-700');
+      btn.classList.toggle('border-emerald-600');
+      showToast('करियर विकल्प आपके सहेजे गए संग्रह में जोड़ा गया!');
+    }
+
+    function saveRoadmapToast() {
+      showToast('करियर रोडमैप आपके व्यक्तिगत डैशबोर्ड में सहेजा गया!');
+    }
+
+    function printRoadmap() {
+      window.print();
+    }
+
+    function requestMentorSession(name) {
+      openEnrollModal(`मेंटर ${name}`);
+    }
+
+    function verifyStudentMilestone(studentName) {
+      showToast(`${studentName} का प्रैक्टिकल माइलस्टोन सत्यापित किया गया!`);
+    }
+
+    function adminApprove(btn, status) {
+      btn.parentElement.innerHTML = `<span class="font-bold ${status === 'Approved' ? 'text-emerald-700' : 'text-rose-600'}">${status}</span>`;
+      showToast(`संस्थान स्थिति अपडेट: ${status}`);
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast-capsule');
+      const msg = document.getElementById('toast-message');
+      msg.innerText = message;
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 3500);
+    }
+
+    function toggleNotifications() {
+      const el = document.getElementById('notification-flyout');
+      el.classList.toggle('hidden');
+      lucide.createIcons();
+    }
+
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('main-sidebar');
+      sidebar.classList.toggle('hidden');
+      sidebar.classList.toggle('fixed');
+      sidebar.classList.toggle('inset-y-0');
+      sidebar.classList.toggle('left-0');
+      sidebar.classList.toggle('z-50');
+      sidebar.classList.toggle('shadow-2xl');
+    }
+
+    function resetDemoData() {
+      UdaanApp.studentProfile.xp = 350;
+      document.getElementById('sidebar-xp').innerText = '350';
+      setRole('student');
+      switchLanguage('hi');
+      showToast('डेमो डेटा प्रारंभिक स्थिति में रीसेट हो गया!');
+    }
+
+    function logoutToLanding() {
+      navigateTo('landing');
+      showToast('सफलतापूर्वक लॉग आउट हो गए।');
+    }
+
+    function filterCourses() {
+      showToast('कोर्स फ़िल्टर अपडेट किए गए');
+    }
+
+    function selectDomainFilter(domain) {
+      navigateTo('explore_careers');
+      showToast(`डोमेन चुना गया: ${domain.toUpperCase()}`);
+    }
+
+    function handleGlobalSearch(e) {
+      if (e.key === 'Enter') {
+        const query = e.target.value;
+        if (query.trim()) {
+          showToast(`'${query}' के परिणाम खोजे जा रहे हैं...`);
+          navigateTo('courses');
+        }
+      }
+    }
+  </script>
+</body>
+</html>
